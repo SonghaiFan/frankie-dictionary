@@ -72,16 +72,31 @@ export default function Home() {
       </h2>
       <div className="mb-4 sm:w-1/3 w-full">
         <div className="flex flex-col md:flex-row items-center justify-center">
-          <div className="flex border border-gray-300 rounded-md px-2 md:px-4 py-2 focus-within:ring-2 focus-within:ring-blue-500 w-full mb-4 md:mb-0 md:mr-8">
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              type="text"
-              className="flex-grow focus:outline-none px-2 md:px-4"
-              placeholder={placeholder.中文}
-            />
+          <div className="relative w-[300px] mb-4 md:mb-0 md:mr-8">
+            <div className="flex border border-gray-300 rounded-md px-2 md:px-4 py-2 focus-within:ring-2 focus-within:ring-blue-500">
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                type="text"
+                className="flex-grow focus:outline-none px-2 md:px-4"
+                placeholder={placeholder.中文}
+              />
+            </div>
+            {query && (
+              <ul className="absolute bg-white border border-gray-300 mt-1 w-full max-h-[5rem] rounded-md overflow-auto z-10">
+                {results.map((item, index) => (
+                  <li
+                    key={index}
+                    onClick={() => handleSelect(item)}
+                    className="cursor-pointer hover:bg-gray-200 px-4 py-2"
+                  >
+                    {item.中文}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
-          <div className="flex flex-row">
+          <div className="flex flex-row mt-[10rem] sm:mt-auto">
             <button
               onClick={handleShowExplanation}
               className="bg-blue-800 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none ml-2"
@@ -96,22 +111,9 @@ export default function Home() {
             </button>
           </div>
         </div>
-        {query && (
-          <ul className="list-none absolute bg-white border border-gray-300 mt-1 max-h-[5rem] min-h-[auto] w-[300px] rounded-md scroll-auto overflow-auto">
-            {results.map((item, index) => (
-              <li
-                key={index}
-                onClick={() => handleSelect(item)}
-                className="cursor-pointer hover:bg-gray-200 px-4 py-2"
-              >
-                {item.中文}
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
       {showExplanation && (
-        <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
           <div className="bg-blue-800 text-white p-2 md:p-4 mb-4  w-full md:w-1/2 mx-4 rounded-lg shadow-lg relative">
             {filteredData.map((item, index) => (
               <div key={index} className="p-2 md:p-4 text-left">
