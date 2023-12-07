@@ -67,7 +67,12 @@ export default function Home() {
         <q className="quotes">你按响门铃，我说欢迎光临。</q>
       </div>
 
-      <h1 className="text-4xl md:text-6xl font-bold mb-2">蓝字典</h1>
+      <h1
+        className="text-4xl md:text-6xl font-bold mb-2"
+        style={{ fontFamily: "'Songti SC', serif" }}
+      >
+        蓝字典
+      </h1>
       <h2 className="text-2xl md:text-4xl font-bold mb-4 text-blue-800 font-sans">
         Blue Dictionary®
       </h2>
@@ -117,7 +122,7 @@ export default function Home() {
         </div>
       </div>
       {showExplanation && (
-        <div className="fixed inset-0 bg-kleinBlue flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
           <div className="bg-kleinBlue text-white p-2 md:p-4 mb-4 w-full md:w-1/2 mx-4 rounded-lg shadow relative">
             {filteredData.map((item, index) => (
               <div key={index} className="p-2 md:p-4 text-left">
@@ -131,7 +136,7 @@ export default function Home() {
                 <div className="text-sm md:text-xl mb-2 md:mb-4 ml-2 md:ml-20">
                   {item.释义}
                 </div>
-                {/* <hr className="mb-2" /> */}
+                <hr className="mb-2" />
                 <div className="text-xs md:text-sm text-right">
                   -{item.出处}
                 </div>
