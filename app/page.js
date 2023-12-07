@@ -55,7 +55,9 @@ export default function Home() {
     setPlaceholder(data[Math.floor(Math.random() * data.length)]);
   };
 
-  const filteredData = selectedItem ? [selectedItem] : [placeholder];
+  const defaultData = query ? [results[0]] : [placeholder];
+
+  const filteredData = selectedItem ? [selectedItem] : defaultData;
 
   return (
     <div className="flex flex-col items-center justify-center w-full mx-auto p-4 h-screen">
