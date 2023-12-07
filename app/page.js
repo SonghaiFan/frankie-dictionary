@@ -110,11 +110,11 @@ export default function Home() {
       </div>
       {showExplanation && (
         <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-auto">
-          <div className="bg-blue-800 text-white p-2 md:p-4 mb-4 w-full md:w-1/2 mx-auto rounded-lg shadow-lg relative">
+          <div className="bg-blue-800 text-white p-2 md:p-4 mb-4  w-full md:w-1/2 mx-4 rounded-lg shadow-lg relative">
             {filteredData.map((item, index) => (
               <div key={index} className="p-2 md:p-4 text-left">
                 <div
-                  className="font-bold text-md md:text-4xl mb-2 md:mb-8"
+                  className="font-bold text-2xl md:text-4xl mb-2 md:mb-8"
                   style={{ fontFamily: "'Songti SC', serif" }}
                 >
                   {item.中文}{" "}
