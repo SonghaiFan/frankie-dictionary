@@ -1,113 +1,148 @@
-import Image from 'next/image'
+"use client";
+import { useState, useEffect, useCallback } from "react";
+import Fuse from "fuse.js";
+import { data } from "@/public/data";
+import { BsSearchHeart } from "react-icons/bs";
+import { ImExit } from "react-icons/im";
+import { FaDice } from "react-icons/fa";
 
 export default function Home() {
+  const [query, setQuery] = useState("");
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showExplanation, setShowExplanation] = useState(false);
+  const [results, setResults] = useState([]);
+  const [fuse, setFuse] = useState(null);
+  const [placeholder, setPlaceholder] = useState([]);
+
+  useEffect(() => {
+    const options = {
+      keys: ["中文", "英文", "解释"],
+      threshold: 0.8,
+    };
+    setFuse(new Fuse(data, options));
+    // Set a random placeholder on initial load
+    setPlaceholder(data[Math.floor(Math.random() * data.length)]);
+  }, []);
+
+  useEffect(() => {
+    if (fuse && query) {
+      const fuzzyResults = fuse.search(query);
+      setResults(fuzzyResults.map((result) => result.item));
+    } else {
+      setResults([]);
+    }
+    setShowExplanation(false);
+  }, [query, fuse]);
+
+  const handleSelect = useCallback((item) => {
+    setSelectedItem(item);
+    setQuery(item.中文);
+  }, []);
+
+  const handleShowExplanation = useCallback(() => {
+    setShowExplanation(true);
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
+    setShowExplanation(false);
+    setSelectedItem(null);
+    setQuery("");
+  }, []);
+
+  const handleRandom = () => {
+    setSelectedItem(null);
+    setQuery("");
+    setPlaceholder(data[Math.floor(Math.random() * data.length)]);
+  };
+
+  const filteredData = selectedItem ? [selectedItem] : [placeholder];
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h1
+        className="text-6xl font-bold mb-2"
+        style={{ fontFamily: "Noto Serif SC" }}
+      >
+        蓝字典
+      </h1>
+      <h2 className="text-4xl font-bold mb-4 text-blue-800 font-sans">
+        Blue Dictionary®
+      </h2>
+      <div className="mb-4">
+        <div className="flex items-center">
+          <div className="flex border border-gray-300 rounded-md px-4 py-2 focus-within:ring-2 focus-within:ring-blue-500 w-[300px] mr-8">
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              type="text"
+              className="flex-grow focus:outline-none px-4"
+              placeholder={placeholder.中文}
             />
+          </div>
+          <button
+            onClick={handleShowExplanation}
+            className="bg-blue-800 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none ml-2"
+          >
+            <BsSearchHeart size={25} />
+          </button>
+          <button
+            onClick={handleRandom}
+            className="bg-blue-800 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none ml-2"
+          >
+            <FaDice size={25} />
+          </button>
+        </div>
+        {query && (
+          <ul className="list-none absolute bg-white border border-gray-300 mt-1 max-h-[5rem] min-h-[auto] w-[300px] rounded-md scroll-auto overflow-auto">
+            {results.map((item, index) => (
+              <li
+                key={index}
+                onClick={() => handleSelect(item)}
+                className="cursor-pointer hover:bg-gray-200 px-4 py-2"
+              >
+                {item.中文}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      {showExplanation && (
+        <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-auto">
+          <div className="bg-blue-800 text-white p-4 mb-4 w-1/2 mx-auto rounded-lg shadow-lg relative">
+            {filteredData.map((item, index) => (
+              <div key={index} className="p-4 text-left">
+                <div
+                  className="font-bold text-4xl mb-8"
+                  style={{ fontFamily: "'Songti SC', serif" }}
+                >
+                  {item.中文} <span className="text-2xl">({item.英文})</span>
+                </div>
+                <div className="text-xl mb-4 ml-20">{item.释义}</div>
+                <hr className="mb-2" />
+                <div className="text-sm text-right">{item.出处}</div>
+              </div>
+            ))}
+            <button
+              onClick={handleCloseModal}
+              className="absolute top-0 right-0 text-xl p-4 hover:bg-blue-600 focus:outline-none rounded-tr-lg"
+            >
+              <ImExit size={25} />
+            </button>
+          </div>
+        </div>
+      )}
+      <footer className="fixed bg-blue-800 text-white text-center p-4 bottom-0 w-full">
+        <div>
+          <span>贡献者: </span>
+          <a href="#!" className="text-blue-300 hover:underline">
+            海（网页制作）
+          </a>
+          <span> & </span>
+          <a href="#!" className="text-blue-300 hover:underline">
+            海苔（整理撰写）
           </a>
         </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+      </footer>
+    </div>
+  );
 }
