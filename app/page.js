@@ -58,19 +58,19 @@ export default function Home() {
   const filteredData = selectedItem ? [selectedItem] : [placeholder];
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="flex flex-col items-center justify-center w-full mx-auto px-4 h-screen">
       <h1
-        className="text-6xl font-bold mb-2"
+        className="text-2xl md:text-6xl font-bold mb-2"
         style={{ fontFamily: "Noto Serif SC" }}
       >
         蓝字典
       </h1>
-      <h2 className="text-4xl font-bold mb-4 text-blue-800 font-sans">
+      <h2 className="text-xl md:text-4xl font-bold mb-4 text-blue-800 font-sans">
         Blue Dictionary®
       </h2>
-      <div className="mb-4">
-        <div className="flex items-center">
-          <div className="flex border border-gray-300 rounded-md px-4 py-2 focus-within:ring-2 focus-within:ring-blue-500 w-[300px] mr-8">
+      <div className="mb-4 w-full">
+        <div className="flex flex-col md:flex-row items-center justify-center">
+          <div className="flex border border-gray-300 rounded-md px-4 py-2 focus-within:ring-2 focus-within:ring-blue-500 w-full md:w-[300px] mb-4 md:mb-0 md:mr-8">
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
