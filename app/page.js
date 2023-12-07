@@ -17,7 +17,7 @@ export default function Home() {
   useEffect(() => {
     const options = {
       keys: ["中文", "英文", "解释"],
-      threshold: 0.8,
+      threshold: 0.3,
     };
     setFuse(new Fuse(data, options));
     // Set a random placeholder on initial load
@@ -61,12 +61,13 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full mx-auto p-4 h-screen">
-      <h1
-        className="text-4xl md:text-6xl font-bold mb-2"
-        style={{ fontFamily: "Noto Serif SC" }}
-      >
-        蓝字典
-      </h1>
+      {/* a qutation  */}
+      <div className="fixed top-10 text-sm md:text-xl mb-2 md:mb-4 ml-2 md:ml-20 italic border-l-4 border-blue-500 pl-4">
+        {/* add date */}
+        <q className="quotes">你按响门铃，我说欢迎光临。</q>
+      </div>
+
+      <h1 className="text-4xl md:text-6xl font-bold mb-2">蓝字典</h1>
       <h2 className="text-2xl md:text-4xl font-bold mb-4 text-blue-800 font-sans">
         Blue Dictionary®
       </h2>
@@ -90,7 +91,10 @@ export default function Home() {
                     onClick={() => handleSelect(item)}
                     className="cursor-pointer hover:bg-gray-200 px-4 py-2"
                   >
-                    {item.中文}
+                    {item.中文}{" "}
+                    <span className="text-sm text-gray-400">
+                      -{item.英文}-{item.出处}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -99,13 +103,13 @@ export default function Home() {
           <div className="flex flex-row mt-[10rem] sm:mt-auto">
             <button
               onClick={handleShowExplanation}
-              className="bg-blue-800 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none ml-2"
+              className="bg-kleinBlue text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none ml-2"
             >
               <BsSearchHeart size={25} />
             </button>
             <button
               onClick={handleRandom}
-              className="bg-blue-800 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none ml-2"
+              className="bg-kleinBlue text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none ml-2"
             >
               <FaDice size={25} />
             </button>
@@ -113,8 +117,8 @@ export default function Home() {
         </div>
       </div>
       {showExplanation && (
-        <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
-          <div className="bg-blue-800 text-white p-2 md:p-4 mb-4  w-full md:w-1/2 mx-4 rounded-lg shadow-lg relative">
+        <div className="fixed inset-0 bg-kleinBlue flex items-center justify-center z-50">
+          <div className="bg-kleinBlue text-white p-2 md:p-4 mb-4 w-full md:w-1/2 mx-4 rounded-lg shadow relative">
             {filteredData.map((item, index) => (
               <div key={index} className="p-2 md:p-4 text-left">
                 <div
@@ -127,8 +131,10 @@ export default function Home() {
                 <div className="text-sm md:text-xl mb-2 md:mb-4 ml-2 md:ml-20">
                   {item.释义}
                 </div>
-                <hr className="mb-2" />
-                <div className="text-xs md:text-sm text-right">{item.出处}</div>
+                {/* <hr className="mb-2" /> */}
+                <div className="text-xs md:text-sm text-right">
+                  -{item.出处}
+                </div>
               </div>
             ))}
             <button
@@ -140,16 +146,13 @@ export default function Home() {
           </div>
         </div>
       )}
-      <footer className="fixed bg-blue-800 text-white text-center p-2 md:p-4 bottom-0 w-full">
+      <footer className="fixed bg-kleinBlue text-white text-center p-2 md:p-4 bottom-0 w-full">
         <div>
           <span>贡献者: </span>
-          <a href="#!" className="text-blue-300 hover:underline">
-            海（网页制作）
-          </a>
-          <span> & </span>
-          <a href="#!" className="text-blue-300 hover:underline">
-            海苔（整理撰写）
-          </a>
+          <a className="text-blue-300 ">(海</a>
+          <span> | </span>
+          <a className="text-blue-300 ">海苔)</a>
+          <span> & All</span>
         </div>
       </footer>
     </div>
