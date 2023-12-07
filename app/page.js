@@ -58,39 +58,41 @@ export default function Home() {
   const filteredData = selectedItem ? [selectedItem] : [placeholder];
 
   return (
-    <div className="flex flex-col items-center justify-center w-full mx-auto px-4 h-screen">
+    <div className="flex flex-col items-center justify-center w-full mx-auto p-4 h-screen">
       <h1
-        className="text-2xl md:text-6xl font-bold mb-2"
+        className="text-4xl md:text-6xl font-bold mb-2"
         style={{ fontFamily: "Noto Serif SC" }}
       >
         蓝字典
       </h1>
-      <h2 className="text-xl md:text-4xl font-bold mb-4 text-blue-800 font-sans">
+      <h2 className="text-2xl md:text-4xl font-bold mb-4 text-blue-800 font-sans">
         Blue Dictionary®
       </h2>
-      <div className="mb-4 w-full">
+      <div className="mb-4 sm:w-1/3 w-full">
         <div className="flex flex-col md:flex-row items-center justify-center">
-          <div className="flex border border-gray-300 rounded-md px-4 py-2 focus-within:ring-2 focus-within:ring-blue-500 w-full md:w-[300px] mb-4 md:mb-0 md:mr-8">
+          <div className="flex border border-gray-300 rounded-md px-2 md:px-4 py-2 focus-within:ring-2 focus-within:ring-blue-500 w-full mb-4 md:mb-0 md:mr-8">
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               type="text"
-              className="flex-grow focus:outline-none px-4"
+              className="flex-grow focus:outline-none px-2 md:px-4"
               placeholder={placeholder.中文}
             />
           </div>
-          <button
-            onClick={handleShowExplanation}
-            className="bg-blue-800 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none ml-2"
-          >
-            <BsSearchHeart size={25} />
-          </button>
-          <button
-            onClick={handleRandom}
-            className="bg-blue-800 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none ml-2"
-          >
-            <FaDice size={25} />
-          </button>
+          <div className="flex flex-row">
+            <button
+              onClick={handleShowExplanation}
+              className="bg-blue-800 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none ml-2"
+            >
+              <BsSearchHeart size={25} />
+            </button>
+            <button
+              onClick={handleRandom}
+              className="bg-blue-800 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none ml-2"
+            >
+              <FaDice size={25} />
+            </button>
+          </div>
         </div>
         {query && (
           <ul className="list-none absolute bg-white border border-gray-300 mt-1 max-h-[5rem] min-h-[auto] w-[300px] rounded-md scroll-auto overflow-auto">
@@ -108,30 +110,33 @@ export default function Home() {
       </div>
       {showExplanation && (
         <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-auto">
-          <div className="bg-blue-800 text-white p-4 mb-4 w-1/2 mx-auto rounded-lg shadow-lg relative">
+          <div className="bg-blue-800 text-white p-2 md:p-4 mb-4 w-full md:w-1/2 mx-auto rounded-lg shadow-lg relative">
             {filteredData.map((item, index) => (
-              <div key={index} className="p-4 text-left">
+              <div key={index} className="p-2 md:p-4 text-left">
                 <div
-                  className="font-bold text-4xl mb-8"
+                  className="font-bold text-md md:text-4xl mb-2 md:mb-8"
                   style={{ fontFamily: "'Songti SC', serif" }}
                 >
-                  {item.中文} <span className="text-2xl">({item.英文})</span>
+                  {item.中文}{" "}
+                  <span className="text-sm md:text-2xl">({item.英文})</span>
                 </div>
-                <div className="text-xl mb-4 ml-20">{item.释义}</div>
+                <div className="text-sm md:text-xl mb-2 md:mb-4 ml-2 md:ml-20">
+                  {item.释义}
+                </div>
                 <hr className="mb-2" />
-                <div className="text-sm text-right">{item.出处}</div>
+                <div className="text-xs md:text-sm text-right">{item.出处}</div>
               </div>
             ))}
             <button
               onClick={handleCloseModal}
-              className="absolute top-0 right-0 text-xl p-4 hover:bg-blue-600 focus:outline-none rounded-tr-lg"
+              className="absolute top-0 right-0 text-xl p-2 md:p-4 hover:bg-blue-600 focus:outline-none rounded-tr-lg"
             >
               <ImExit size={25} />
             </button>
           </div>
         </div>
       )}
-      <footer className="fixed bg-blue-800 text-white text-center p-4 bottom-0 w-full">
+      <footer className="fixed bg-blue-800 text-white text-center p-2 md:p-4 bottom-0 w-full">
         <div>
           <span>贡献者: </span>
           <a href="#!" className="text-blue-300 hover:underline">
