@@ -60,13 +60,13 @@ export default function Home() {
   const filteredData = selectedItem || (query ? results[0] : placeholder);
 
   return (
-    <div className="flex flex-col items-center justify-center w-full mx-auto p-4 h-screen overflow-auto">
+    <div className="flex flex-col items-center justify-evenly w-full mx-auto p-4 h-screen overflow-auto">
       <Quote />
-      <div className="-mt-20">
+      <div className="-mb-[10rem]">
         <Vinyl />
         <Title />
       </div>
-      <div className="mt-4 mb-4">
+      <div className="mb-[20rem]">
         <SearchInput
           query={query}
           setQuery={setQuery}

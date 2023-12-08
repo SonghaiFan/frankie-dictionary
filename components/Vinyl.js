@@ -28,7 +28,7 @@ const Vinyl = () => {
   useEffect(() => {
     // Initialize the audio element and set it to loop
     if (randomIndex !== null) {
-      audioRef.current = new Audio(`/music/Sad_Lofi${randomIndex}.mp3`);
+      audioRef.current = new Audio(`/music/Sad_LoFi${randomIndex}.mp3`);
       audioRef.current.loop = true;
 
       return () => {
@@ -53,11 +53,7 @@ const Vinyl = () => {
 
   // Render a placeholder or null until the randomIndex is set
   if (randomIndex === null) {
-    return (
-      <VinylCover>
-        <div className="absolute inset-0 w-full h-full bg-black"></div>
-      </VinylCover>
-    );
+    return <VinylCover></VinylCover>;
   }
 
   return (
