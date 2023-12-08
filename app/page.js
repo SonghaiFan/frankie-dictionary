@@ -60,7 +60,8 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-Stretch w-full mx-auto min-h-screen overflow-auto">
-      <div className="mt-[10%]">
+      <div className="flex-grow" />
+      <div className="h-[10%]">
         <Vinyl />
         <Title />
       </div>
