@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { FaPlay, FaStop } from "react-icons/fa";
+import { MdMusicNote, MdMusicOff } from "react-icons/md";
 import YouTube from "react-youtube";
 
 const YouTubeMusicPlayer = () => {
   const [player, setPlayer] = useState(null);
-  const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(false);
 
   const videoOptions = {
     height: "0",
     width: "0",
     playerVars: {
-      autoplay: 1,
+      autoplay: 0, // Set autoplay to 0
       controls: 0,
       showinfo: 0,
       modestbranding: 1,
@@ -39,7 +39,7 @@ const YouTubeMusicPlayer = () => {
   };
 
   return (
-    <div className="flex w-full justify-center">
+    <div className="fixed top-5 right-3">
       <YouTube
         videoId="jfKfPfyJRdk"
         opts={videoOptions}
@@ -47,14 +47,14 @@ const YouTubeMusicPlayer = () => {
         className="hidden"
       />
       <button
-        className={`p-2 rounded-lg bg-kleinBlue`}
+        className={`text-2xl p-2 rounded-lg bg-kleinBlue`}
         onClick={toggleMusic}
         aria-label={playing ? "Stop" : "Play"}
       >
         {playing ? (
-          <FaStop className="text-white" />
+          <MdMusicNote className="text-white" />
         ) : (
-          <FaPlay className="text-white" />
+          <MdMusicOff className="text-white" />
         )}
       </button>
     </div>

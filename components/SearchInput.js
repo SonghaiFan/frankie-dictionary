@@ -14,13 +14,22 @@ const SearchInput = ({
     <div className="mb-4 w-full">
       <div className="flex flex-col md:flex-row items-center ">
         <div className="relative mb-4 md:mb-0 md:mr-8">
-          <input
-            className="flex flex-grow border border-gray-300 rounded-md px-2 md:px-4 py-2 focus-within:ring-2 focus-within:ring-blue-500 focus:outline-none"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            type="text"
-            placeholder={defaultText}
-          />
+          <div className="flex items-center border border-gray-300 rounded-md">
+            <input
+              className="flex-grow px-2 py-2 focus:outline-none rounded-l-md"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              type="text"
+              placeholder={defaultText}
+            />
+            <button
+              onClick={onConfirm}
+              className="bg-kleinBlue text-white px-4 py-2 rounded-r-md hover:bg-blue-600 focus:outline-none"
+            >
+              <BsSearchHeart size={25} />
+            </button>
+          </div>
+
           {query && (
             <ul className="absolute bg-white border border-gray-300 mt-1 w-full max-h-[10rem] rounded-md overflow-auto z-10">
               {results.map((item, index) => (
@@ -42,12 +51,6 @@ const SearchInput = ({
             className="bg-kleinBlue text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none "
           >
             <FaDice size={25} />
-          </button>
-          <button
-            onClick={onConfirm}
-            className="bg-kleinBlue text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none "
-          >
-            <BsSearchHeart size={25} />
           </button>
         </div>
       </div>
