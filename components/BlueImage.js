@@ -2,30 +2,35 @@ import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 
 const BlueImage = () => {
-  const [randomIndex, setRandomIndex] = useState(
-    Math.floor(Math.random() * 6) + 1
-  );
-
+  const [randomIndex, setRandomIndex] = useState(null);
   const [playing, setPlaying] = useState(false);
 
   const audioRef = useRef(null);
 
+  // This useEffect will run once, when the component is mounted on the client side
+  useEffect(() => {
+    // Generate a random index for the image
+    setRandomIndex(Math.floor(Math.random() * 6) + 1);
+  }, []);
+
   useEffect(() => {
     // Initialize the audio element and set it to loop
-    audioRef.current = new Audio(`/music/Music${randomIndex}.mp3`);
-    audioRef.current.loop = true;
+    if (randomIndex !== null) {
+      audioRef.current = new Audio(`/music/Music${randomIndex}.mp3`);
+      audioRef.current.loop = true;
 
-    return () => {
-      // Cleanup: stop the music when the component unmounts
-      audioRef.current.pause();
-    };
+      return () => {
+        // Cleanup: stop the music when the component unmounts
+        audioRef.current.pause();
+      };
+    }
   }, [randomIndex]);
 
   useEffect(() => {
     // Handle playing state change
-    if (playing) {
+    if (playing && audioRef.current) {
       audioRef.current.play();
-    } else {
+    } else if (audioRef.current) {
       audioRef.current.pause();
     }
   }, [playing]);
@@ -34,16 +39,17 @@ const BlueImage = () => {
     setPlaying(!playing);
   };
 
-  useEffect(() => {
-    setRandomIndex(Math.floor(Math.random() * 6) + 1);
-  }, []);
-
   // Define the width and height of your images
   const imageWidth = 300;
   const imageHeight = 300;
 
+  // Render a placeholder or null until the randomIndex is set
+  if (randomIndex === null) {
+    return null;
+  }
+
   return (
-    <div className="flex justify-center bg-kleinBlue rounded mb-2 w-fit m-auto shadow-lg">
+    <div className="flex justify-center bg-kleinBlue rounded mb-2 w-fit m-auto shadow-xl">
       <div
         className="relative md:w-[300px] md:h-[300px] w-[100px] h-[100px] rounded-full overflow-hidden "
         onClick={toggleMusic}

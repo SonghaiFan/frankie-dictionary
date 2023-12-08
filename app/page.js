@@ -60,7 +60,7 @@ export default function Home() {
   const filteredData = selectedItem || (query ? results[0] : placeholder);
 
   return (
-    <div className="flex flex-col items-center justify-center w-full mx-auto p-4 h-screen">
+    <div className="flex flex-col items-center justify-center w-full mx-auto p-4 h-screen overflow-auto">
       <Quote />
       <div className="-mt-20">
         <BlueImage />
