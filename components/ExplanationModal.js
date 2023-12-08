@@ -1,11 +1,18 @@
 import { ImExit } from "react-icons/im";
+import { FaDice } from "react-icons/fa";
 
-const ExplanationModal = ({ show, onClose, data }) => {
+const ExplanationModal = ({ show, onClose, data, onRandom }) => {
   if (!show || !data) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
-      <div className="bg-kleinBlue text-white p-2 md:p-4 mb-4 w-full md:w-1/2 mx-4 rounded-lg shadow relative">
+    <div
+      className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50"
+      onClick={onClose}
+    >
+      <div
+        className="bg-kleinBlue text-white p-2 md:p-4 mb-4 w-full md:w-1/2 mx-4 rounded-lg shadow relative"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="p-2 md:p-4 text-left">
           <div
             className="font-bold text-2xl md:text-4xl mb-2 md:mb-8"
@@ -26,6 +33,12 @@ const ExplanationModal = ({ show, onClose, data }) => {
           className="absolute top-0 right-0 text-xl p-2 md:p-4 hover:bg-blue-600 focus:outline-none rounded-tr-lg"
         >
           <ImExit size={25} />
+        </button>
+        <button
+          onClick={onRandom}
+          className="bg-kleinBlue text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none hidden"
+        >
+          <FaDice size={25} />
         </button>
       </div>
     </div>

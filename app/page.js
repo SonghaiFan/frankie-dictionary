@@ -13,23 +13,42 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
   const [showExplanation, setShowExplanation] = useState(false);
+
   const [randomIndex, setRandomIndex] = useState(0);
 
   useEffect(() => {
     setRandomIndex(Math.floor(Math.random() * data.length));
   }, []);
 
+  useEffect(() => {
+    // setShowExplanation(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
+
   const placeholder = data[randomIndex];
   const results = useFuseSearch(data, query);
 
   const handleSelect = (item) => {
-    // setShowExplanation(true);
+    setShowExplanation(true);
     setSelectedItem(item);
     setQuery(item.中文);
   };
 
   const handleOpenModal = () => {
-    setShowExplanation(true);
+    if (results.length === 0 && query) {
+      return;
+    }
+
+    if (results.length === 0 && !query) {
+      setShowExplanation(true);
+      setSelectedItem(placeholder);
+      return;
+    }
+
+    if (results.length > 0 && results[0].中文 === query) {
+      setShowExplanation(true);
+      setSelectedItem(results[0]);
+    }
   };
 
   const handleCloseModal = () => {
@@ -66,6 +85,7 @@ export default function Home() {
         show={showExplanation}
         onClose={handleCloseModal}
         data={filteredData}
+        onRandom={handleRandom}
       />
       <Footer />
       <MP3Player />

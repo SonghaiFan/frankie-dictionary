@@ -7,7 +7,7 @@ const useFuseSearch = (data, query) => {
   useEffect(() => {
     const fuse = new Fuse(data, {
       keys: ["中文", "英文", "解释"],
-      threshold: 0.3,
+      threshold: 0.2,
     });
     if (query) {
       const fuzzyResults = fuse.search(query);
