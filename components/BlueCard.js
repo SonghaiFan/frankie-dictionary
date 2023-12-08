@@ -46,18 +46,18 @@ const BlueCard = ({ show, onClose, data }) => {
 
   const heartVariants = {
     hover: {
-      scale: 1.1, // Slightly increase the scale when hovered
+      scale: 1.1,
       transition: {
-        type: "spring", // Use a spring animation for a smooth effect
-        stiffness: 300, // Adjust stiffness for the spring animation
+        type: "spring",
+        stiffness: 300,
       },
     },
     click: {
-      scale: 0.9, // Slightly decrease the scale when clicked
+      scale: 0.9,
       transition: {
         type: "spring", // Use a spring animation for a smooth effect
-        stiffness: 300, // Adjust stiffness for the spring animation
-        duration: 0.1, // Duration of the click animation
+        stiffness: 300,
+        duration: 0.1,
       },
     },
   };
@@ -80,7 +80,7 @@ const BlueCard = ({ show, onClose, data }) => {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50"
+      className="fixed inset-0 bg-black bg-opacity-90 backdrop-blur flex items-center justify-center z-50"
       onClick={onClose}
       style={modalStyle}
     >
