@@ -1,5 +1,4 @@
 "use client";
-// Home.js
 import { useState, useEffect } from "react";
 import { data } from "@/public/data";
 import ExplanationModal from "@/components/ExplanationModal";
@@ -8,19 +7,17 @@ import useFuseSearch from "@/hooks/useFuseSearch";
 import SearchInput from "@/components/SearchInput";
 import Quote from "@/components/Quote";
 import Title from "@/components/Title";
-import YouTubeMusicPlayer from "@/components/YoutubeMusic";
+import MP3Player from "@/components/MP3Player";
 
 export default function Home() {
   const [query, setQuery] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
   const [showExplanation, setShowExplanation] = useState(false);
-  const [randomIndex, setRandomIndex] = useState(
-    Math.floor(Math.random() * data.length)
-  );
+  const [randomIndex, setRandomIndex] = useState(0);
 
-  // useEffect(() => {
-  //   setRandomIndex(Math.floor(Math.random() * data.length));
-  // }, []);
+  useEffect(() => {
+    setRandomIndex(Math.floor(Math.random() * data.length));
+  }, []);
 
   const placeholder = data[randomIndex];
   const results = useFuseSearch(data, query);
@@ -71,7 +68,7 @@ export default function Home() {
         data={filteredData}
       />
       <Footer />
-      <YouTubeMusicPlayer />
+      <MP3Player />
     </div>
   );
 }
