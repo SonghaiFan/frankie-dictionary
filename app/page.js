@@ -60,12 +60,11 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-Stretch w-full mx-auto min-h-screen overflow-auto">
-      <div className="mt-[2rem]">
+      <div className="mt-[10%]">
         <Vinyl />
         <Title />
       </div>
-      <div className="flex-grow" />
-      <div className="h-[60%]">
+      <div className="h-[40%] mb-[10%]">
         <SearchInput
           query={query}
           setQuery={setQuery}
