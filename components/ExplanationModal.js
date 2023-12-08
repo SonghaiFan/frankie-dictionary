@@ -1,5 +1,6 @@
 import { ImExit } from "react-icons/im";
 import { FaDice } from "react-icons/fa";
+import { TbEyeClosed } from "react-icons/tb";
 
 const ExplanationModal = ({ show, onClose, data, onRandom }) => {
   if (!show || !data) return null;
@@ -32,7 +33,7 @@ const ExplanationModal = ({ show, onClose, data, onRandom }) => {
           onClick={onClose}
           className="absolute top-0 right-0 text-xl p-2 md:p-4 hover:bg-blue-600 focus:outline-none rounded-tr-lg"
         >
-          <ImExit size={25} />
+          <TbEyeClosed size={25} />
         </button>
         <button
           onClick={onRandom}

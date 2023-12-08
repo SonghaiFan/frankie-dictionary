@@ -63,6 +63,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full mx-auto p-4 h-screen">
+      <Quote />
       <div className="-mt-20">
         <BlueImage />
         <Title />
@@ -84,7 +85,7 @@ export default function Home() {
         data={filteredData}
         onRandom={handleRandom}
       />
-      <Quote />
+
       <Footer />
       <MP3Player />
     </div>
