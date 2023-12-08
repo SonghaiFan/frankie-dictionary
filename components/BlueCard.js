@@ -31,10 +31,7 @@ const BlueCard = ({ show, onClose, data }) => {
             {data.中文}
             <span className="text-sm md:text-2xl">({data.英文})</span>
           </div>
-          <div
-            className="text-sm md:text-xl mb-2 md:mb-4 ml-[2rem] md:ml-[5rem]"
-            style={{ fontFamily: "'Zpix', sans-serif" }}
-          >
+          <div className="font-thin text-sm md:text-xl mb-2 md:mb-4 ml-[2rem] md:ml-[5rem]">
             {data.释义}
           </div>
           <hr className="mb-2" />
