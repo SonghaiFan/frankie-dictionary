@@ -13,8 +13,8 @@ const BlueImage = () => {
   const imageHeight = 300;
 
   return (
-    <div className="flex justify-center">
-      <div className="relative md:w-[300px] md:h-[300px] w-[100px] h-[100px] rounded-full shadow-lg mb-5 overflow-hidden">
+    <div className="flex justify-center bg-kleinBlue rounded mb-2">
+      <div className="relative md:w-[300px] md:h-[300px] w-[100px] h-[100px] rounded-full shadow-lg overflow-hidden">
         <Image
           src={`/images/Blue_Photo${randomImageIndex}.jpg`}
           alt="Blue_Photo"

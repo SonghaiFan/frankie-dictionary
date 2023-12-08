@@ -31,13 +31,13 @@ const ExplanationModal = ({ show, onClose, data, onRandom }) => {
 
         <button
           onClick={onClose}
-          className="absolute top-0 right-0 text-xl p-2 md:p-4 focus:outline-none rounded-tr-lg"
+          className="absolute top-0 right-0 text-xl p-2 md:p-4  rounded-tr-lg hidden"
         >
           <TbEyeClosed size={25} />
         </button>
         <button
           onClick={onRandom}
-          className="bg-kleinBlue text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none hidden"
+          className="bg-kleinBlue text-white px-4 py-2 rounded-md  hidden"
         >
           <FaDice size={25} />
         </button>
