@@ -49,7 +49,7 @@ const SearchInput = ({
             </ul>
           )}
         </div>
-        <div className="flex flex-row gap-5 mt-[15rem] md:mt-auto">
+        <div className="flex flex-row gap-5 mt-[10rem] md:mt-auto">
           <button
             onClick={onRandom}
             className="bg-kleinBlue text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none "

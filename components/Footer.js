@@ -9,7 +9,7 @@ const Footer = () => {
       <div className="text-sm ">
         Acknowledgement: <a className="text-blue-300 "> 上山养大猫 </a>
       </div>
-      <div className="text-sm">
+      <div className="text-sm mb-5">
         <span>© 2023 蓝字典 Blue Dictionary®</span>
       </div>
     </footer>

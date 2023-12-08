@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { data } from "@/public/data";
+import { data } from "@/public/data/data";
 import ExplanationModal from "@/components/ExplanationModal";
 import Footer from "@/components/Footer";
 import useFuseSearch from "@/hooks/useFuseSearch";
@@ -8,6 +8,7 @@ import SearchInput from "@/components/SearchInput";
 import Quote from "@/components/Quote";
 import Title from "@/components/Title";
 import MP3Player from "@/components/MP3Player";
+import Image from "next/image";
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -15,15 +16,12 @@ export default function Home() {
   const [showExplanation, setShowExplanation] = useState(false);
 
   const [randomIndex, setRandomIndex] = useState(0);
+  const [randomImageIndex, setRandomImageIndex] = useState(0);
 
   useEffect(() => {
     setRandomIndex(Math.floor(Math.random() * data.length));
+    setRandomImageIndex(Math.floor(Math.random() * 6) + 1);
   }, []);
-
-  useEffect(() => {
-    // setShowExplanation(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query]);
 
   const placeholder = data[randomIndex];
   const results = useFuseSearch(data, query);
@@ -67,10 +65,18 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center w-full mx-auto p-4 h-screen">
       <Quote />
-      <div className="mt-2">
+      <div className="-mt-20">
+        <Image
+          className="rounded-full shadow-lg m-auto mb-5 "
+          src={`/images/Blue_Photo${randomImageIndex}.jpg`}
+          alt="Blue_Photo"
+          width={200}
+          height={200}
+          priority
+        />
         <Title />
       </div>
-      <div className="mt-4 mb-8">
+      <div className="mt-4 mb-4">
         <SearchInput
           query={query}
           setQuery={setQuery}

@@ -7,7 +7,7 @@ const MP3Player = () => {
 
   useEffect(() => {
     // Initialize the audio element and set it to loop
-    audioRef.current = new Audio("/Shipwreck-Cove(chosic.com).mp3");
+    audioRef.current = new Audio("/music/Shipwreck-Cove(chosic.com).mp3");
     audioRef.current.loop = true;
 
     return () => {
