@@ -52,7 +52,7 @@ const BlueImage = () => {
           height={imageHeight}
           className={`absolute inset-0 w-full h-full object-cover rounded-full ${
             playing ? "rotate" : "grayscale"
-          } hover:grayscale-0 transition-all duration-500 ease-in-out`}
+          } hover:grayscale-0 hover:scale-105 transition-all duration-500 ease-in-out`}
           priority
         />
       </div>
