@@ -2,7 +2,10 @@ import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 
 const BlueImage = () => {
-  const [randomIndex, setRandomIndex] = useState(1);
+  const [randomIndex, setRandomIndex] = useState(
+    Math.floor(Math.random() * 6) + 1
+  );
+
   const [playing, setPlaying] = useState(false);
 
   const audioRef = useRef(null);
