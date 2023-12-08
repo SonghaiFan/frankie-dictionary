@@ -8,7 +8,7 @@ import SearchInput from "@/components/SearchInput";
 import Quote from "@/components/Quote";
 import Title from "@/components/Title";
 import MP3Player from "@/components/MP3Player";
-import Image from "next/image";
+import BlueImage from "@/components/BlueImage";
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -20,7 +20,6 @@ export default function Home() {
 
   useEffect(() => {
     setRandomIndex(Math.floor(Math.random() * data.length));
-    setRandomImageIndex(Math.floor(Math.random() * 6) + 1);
   }, []);
 
   const placeholder = data[randomIndex];
@@ -64,16 +63,8 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full mx-auto p-4 h-screen">
-      <Quote />
       <div className="-mt-20">
-        <Image
-          className="rounded-full shadow-lg m-auto mb-5 "
-          src={`/images/Blue_Photo${randomImageIndex}.jpg`}
-          alt="Blue_Photo"
-          width={200}
-          height={200}
-          priority
-        />
+        <BlueImage />
         <Title />
       </div>
       <div className="mt-4 mb-4">
@@ -93,6 +84,7 @@ export default function Home() {
         data={filteredData}
         onRandom={handleRandom}
       />
+      <Quote />
       <Footer />
       <MP3Player />
     </div>
