@@ -62,7 +62,7 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-evenly w-full mx-auto p-4 h-screen overflow-auto">
       <Quote />
-      <div className="-mb-[10rem]">
+      <div className="-mb-[5rem]">
         <Vinyl />
         <Title />
       </div>

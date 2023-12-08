@@ -3,7 +3,7 @@ const Title = () => {
     <>
       <h1
         className="text-4xl md:text-6xl font-bold mb-2 text-center"
-        style={{ fontFamily: "'Songti SC', serif" }}
+        style={{ fontFamily: "'Noto Serif SC', serif" }}
       >
         蓝字典
       </h1>
