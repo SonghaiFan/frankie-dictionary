@@ -9,6 +9,7 @@ import Quote from "@/components/Quote";
 import Title from "@/components/Title";
 import MP3Player from "@/components/MP3Player";
 import BlueImage from "@/components/BlueImage";
+import About from "@/components/About";
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -16,7 +17,6 @@ export default function Home() {
   const [showExplanation, setShowExplanation] = useState(false);
 
   const [randomIndex, setRandomIndex] = useState(0);
-  const [randomImageIndex, setRandomImageIndex] = useState(0);
 
   useEffect(() => {
     setRandomIndex(Math.floor(Math.random() * data.length));
@@ -88,6 +88,7 @@ export default function Home() {
 
       <Footer />
       <MP3Player />
+      <About />
     </div>
   );
 }

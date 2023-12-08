@@ -11,7 +11,7 @@ const ExplanationModal = ({ show, onClose, data, onRandom }) => {
       onClick={onClose}
     >
       <div
-        className="bg-kleinBlue text-white p-2 md:p-4 mb-4 w-full md:w-1/2 mx-4 rounded-lg shadow relative"
+        className="relative bg-kleinBlue text-white p-2 md:p-4 mb-4 w-full md:w-1/2 mx-4 rounded-lg shadow "
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-2 md:p-4 text-left">
@@ -31,7 +31,7 @@ const ExplanationModal = ({ show, onClose, data, onRandom }) => {
 
         <button
           onClick={onClose}
-          className="absolute top-0 right-0 text-xl p-2 md:p-4 hover:bg-blue-600 focus:outline-none rounded-tr-lg"
+          className="absolute top-0 right-0 text-xl p-2 md:p-4 focus:outline-none rounded-tr-lg"
         >
           <TbEyeClosed size={25} />
         </button>

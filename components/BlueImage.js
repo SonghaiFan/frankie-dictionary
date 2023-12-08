@@ -8,15 +8,19 @@ const BlueImage = () => {
     setRandomImageIndex(Math.floor(Math.random() * 6) + 1);
   }, []);
 
+  // Define the width and height of your images
+  const imageWidth = 300;
+  const imageHeight = 300;
+
   return (
     <div className="flex justify-center">
-      <div className="sm:w-[300px] sm:h-[300px] w-[100px] h-[100px] rounded-full shadow-lg mb-5 overflow-hidden relative">
+      <div className="relative md:w-[300px] md:h-[300px] w-[100px] h-[100px] rounded-full shadow-lg mb-5 overflow-hidden">
         <Image
-          className="rounded-full"
           src={`/images/Blue_Photo${randomImageIndex}.jpg`}
           alt="Blue_Photo"
-          layout="fill"
-          objectFit="cover"
+          width={imageWidth}
+          height={imageHeight}
+          className="absolute inset-0 w-full h-full object-cover rounded-full"
           priority
         />
       </div>
