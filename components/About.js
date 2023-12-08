@@ -42,6 +42,9 @@ const About = () => {
             <div className="mb-[2.25rem]" />
             <p className="mb-2 text-sm md:text-base">
               在语言的众多层次中，词作为最基本的构成单元，其内涵和外延常被固化于传统的辞典解释之中。然而，语言作为一种动态而复杂的符号系统，其内在的涵义远远超出了表面的字面意义。蓝字典旨在探索并挑战这种传统的词义固化，通过解构视角重塑词汇的定义。
+              Music by Purrple Cat | https://purrplecat.com/ Music promoted by
+              https://www.chosic.com/free-music/all/ Creative Commons CC BY 3.0
+              https://creativecommons.org/licenses/by/3.0/
             </p>
           </div>
         </div>
