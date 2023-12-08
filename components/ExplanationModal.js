@@ -1,8 +1,18 @@
-import { ImExit } from "react-icons/im";
-import { FaDice } from "react-icons/fa";
-import { TbEyeClosed } from "react-icons/tb";
+import { useEffect, useState } from "react";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
 
 const ExplanationModal = ({ show, onClose, data, onRandom }) => {
+  console.log(data);
+  const [liked, setLiked] = useState(false);
+
+  useEffect(() => {
+    setLiked(false);
+  }, [data]);
+
+  const toggleLike = () => {
+    setLiked(!liked);
+  };
+
   if (!show || !data) return null;
 
   return (
@@ -30,16 +40,12 @@ const ExplanationModal = ({ show, onClose, data, onRandom }) => {
         </div>
 
         <button
-          onClick={onClose}
-          className="absolute top-0 right-0 text-xl p-2 md:p-4  rounded-tr-lg hidden"
+          onClick={toggleLike}
+          className={`bg-kleinBlue text-red-500 px-4 py-2 rounded-md transition duration-300 ease-in-out ${
+            liked ? "animate-click" : "animate-hover"
+          }`}
         >
-          <TbEyeClosed size={25} />
-        </button>
-        <button
-          onClick={onRandom}
-          className="bg-kleinBlue text-white px-4 py-2 rounded-md  hidden"
-        >
-          <FaDice size={25} />
+          {liked ? <FaHeart size={25} /> : <FaRegHeart size={25} />}
         </button>
       </div>
     </div>

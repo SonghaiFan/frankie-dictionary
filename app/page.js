@@ -7,7 +7,7 @@ import useFuseSearch from "@/hooks/useFuseSearch";
 import SearchInput from "@/components/SearchInput";
 import Quote from "@/components/Quote";
 import Title from "@/components/Title";
-import BlueImage from "@/components/BlueImage";
+import Vinyl from "@/components/Vinyl";
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -63,7 +63,7 @@ export default function Home() {
     <div className="flex flex-col items-center justify-center w-full mx-auto p-4 h-screen overflow-auto">
       <Quote />
       <div className="-mt-20">
-        <BlueImage />
+        <Vinyl />
         <Title />
       </div>
       <div className="mt-4 mb-4">

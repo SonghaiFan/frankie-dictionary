@@ -14,3 +14,37 @@
 .rotate {
   animation: rotate 15s linear infinite;
 }
+
+/* Add these styles to your CSS file */
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes clickEffect {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-hover:hover {
+  animation: pulse 0.6s ease-in-out infinite;
+}
+
+.animate-click {
+  animation: clickEffect 0.4s ease-in-out;
+}

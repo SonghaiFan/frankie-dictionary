@@ -1,7 +1,17 @@
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 
-const BlueImage = () => {
+const VinylCover = ({ children }) => {
+  return (
+    <div className="flex justify-center bg-kleinBlue rounded mb-2 w-fit m-auto shadow-xl">
+      <div className="relative md:w-[300px] md:h-[300px] w-[100px] h-[100px] rounded-full overflow-hidden ">
+        {children}
+      </div>
+    </div>
+  );
+};
+
+const Vinyl = () => {
   const [randomIndex, setRandomIndex] = useState(null);
   const [playing, setPlaying] = useState(false);
 
@@ -16,7 +26,7 @@ const BlueImage = () => {
   useEffect(() => {
     // Initialize the audio element and set it to loop
     if (randomIndex !== null) {
-      audioRef.current = new Audio(`/music/Music${randomIndex}.mp3`);
+      audioRef.current = new Audio(`/music/Sad_Lofi${randomIndex}.mp3`);
       audioRef.current.loop = true;
 
       return () => {
@@ -45,28 +55,28 @@ const BlueImage = () => {
 
   // Render a placeholder or null until the randomIndex is set
   if (randomIndex === null) {
-    return null;
+    return (
+      <VinylCover>
+        <div className="absolute inset-0 w-full h-full bg-black"></div>
+      </VinylCover>
+    );
   }
 
   return (
-    <div className="flex justify-center bg-kleinBlue rounded mb-2 w-fit m-auto shadow-xl">
-      <div
-        className="relative md:w-[300px] md:h-[300px] w-[100px] h-[100px] rounded-full overflow-hidden "
+    <VinylCover>
+      <Image
+        className={`absolute inset-0 w-full h-full object-cover rounded-full ${
+          playing ? "rotate" : "grayscale"
+        } hover:grayscale-0 hover:scale-105 transition-all duration-500 ease-in-out`}
+        src={`/images/Blue_Photo${randomIndex}.jpg`}
         onClick={toggleMusic}
-      >
-        <Image
-          src={`/images/Blue_Photo${randomIndex}.jpg`}
-          alt="Blue_Photo"
-          width={imageWidth}
-          height={imageHeight}
-          className={`absolute inset-0 w-full h-full object-cover rounded-full ${
-            playing ? "rotate" : "grayscale"
-          } hover:grayscale-0 hover:scale-105 transition-all duration-500 ease-in-out`}
-          priority
-        />
-      </div>
-    </div>
+        alt="Blue_Photo"
+        width={imageWidth}
+        height={imageHeight}
+        priority
+      />
+    </VinylCover>
   );
 };
 
-export default BlueImage;
+export default Vinyl;
