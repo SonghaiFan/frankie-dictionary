@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 
-const ExplanationModal = ({ show, onClose, data, onRandom }) => {
-  console.log(data);
+const BlueCard = ({ show, onClose, data }) => {
   const [liked, setLiked] = useState(false);
 
   useEffect(() => {
@@ -52,4 +51,4 @@ const ExplanationModal = ({ show, onClose, data, onRandom }) => {
   );
 };
 
-export default ExplanationModal;
+export default BlueCard;

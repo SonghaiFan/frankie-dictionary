@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { data } from "@/public/data/data";
-import ExplanationModal from "@/components/ExplanationModal";
+import BlueCard from "@/components/BlueCard";
 import Footer from "@/components/Footer";
 import useFuseSearch from "@/hooks/useFuseSearch";
 import SearchInput from "@/components/SearchInput";
@@ -77,7 +77,7 @@ export default function Home() {
           onConfirm={handleOpenModal}
         />
       </div>
-      <ExplanationModal
+      <BlueCard
         show={showExplanation}
         onClose={handleCloseModal}
         data={filteredData}

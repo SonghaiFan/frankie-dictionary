@@ -3,8 +3,10 @@ import { useState, useEffect, useRef } from "react";
 
 const VinylCover = ({ children }) => {
   return (
-    <div className="flex justify-center bg-kleinBlue rounded mb-2 w-fit m-auto shadow-xl">
-      <div className="relative md:w-[300px] md:h-[300px] w-[100px] h-[100px] rounded-full overflow-hidden ">
+    <div className="flex justify-center bg-kleinBlue rounded mb-2 w-fit h-fit m-auto shadow-xl">
+      <div
+        className={`relative md:w-[250px] md:h-[250px] w-[100px] h-[100px] rounded-full overflow-hidden `}
+      >
         {children}
       </div>
     </div>
@@ -49,10 +51,6 @@ const Vinyl = () => {
     setPlaying(!playing);
   };
 
-  // Define the width and height of your images
-  const imageWidth = 300;
-  const imageHeight = 300;
-
   // Render a placeholder or null until the randomIndex is set
   if (randomIndex === null) {
     return (
@@ -71,8 +69,8 @@ const Vinyl = () => {
         src={`/images/Blue_Photo${randomIndex}.jpg`}
         onClick={toggleMusic}
         alt="Blue_Photo"
-        width={imageWidth}
-        height={imageHeight}
+        width={300}
+        height={300}
         priority
       />
     </VinylCover>
