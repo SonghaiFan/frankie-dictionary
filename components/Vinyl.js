@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 
 const VinylCover = ({ children }) => {
@@ -51,23 +52,47 @@ const Vinyl = () => {
     setPlaying(!playing);
   };
 
+  // Animation variants for rotating and scaling
+  const imageVariants = {
+    playing: {
+      rotate: 360,
+      filter: "grayscale(0%)",
+      transition: { duration: 15, ease: "linear", repeat: Infinity },
+    },
+    paused: {
+      rotate: 0,
+      filter: "grayscale(100%)",
+      transition: { duration: 0.5, ease: "easeInOut" },
+    },
+  };
+
+  // Hover variants
+  const hoverVariants = {
+    hover: {
+      scale: 1.05, // scale up slightly on hover
+      filter: "grayscale(0%)", // remove grayscale on hover
+      transition: { duration: 0.5, ease: "easeInOut" },
+    },
+  };
+
   // Render a placeholder or null until the randomIndex is set
   if (randomIndex === null) {
     return <VinylCover></VinylCover>;
   }
-
   return (
     <VinylCover>
-      <Image
-        className={`absolute inset-0 w-full h-full object-cover rounded-full ${
-          playing ? "rotate" : "grayscale"
-        } hover:grayscale-0 hover:scale-105 transition-all duration-500 ease-in-out`}
+      <motion.img
+        initial="paused"
+        animate={playing ? "playing" : "paused"}
+        whileHover="hover"
+        variants={{ ...imageVariants, ...hoverVariants }}
         src={`/images/Blue_Photo${randomIndex}.jpg`}
         onClick={toggleMusic}
         alt="Blue_Photo"
         width={300}
         height={300}
-        priority
+        className="absolute inset-0 w-full h-full object-cover rounded-full"
+        style={{ position: "absolute", inset: 0 }}
       />
     </VinylCover>
   );

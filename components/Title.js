@@ -7,7 +7,7 @@ const Title = () => {
       >
         蓝字典
       </h1>
-      <h2 className="text-2xl md:text-4xl font-bold mb-4 text-blue-800 font-sans">
+      <h2 className="text-2xl md:text-4xl font-bold mb-4 text-kleinBlue font-sans">
         Blue Dictionary®
       </h2>
     </div>
