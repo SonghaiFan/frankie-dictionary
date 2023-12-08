@@ -5,7 +5,6 @@ import BlueCard from "@/components/BlueCard";
 import Footer from "@/components/Footer";
 import useFuseSearch from "@/hooks/useFuseSearch";
 import SearchInput from "@/components/SearchInput";
-import Quote from "@/components/Quote";
 import Title from "@/components/Title";
 import Vinyl from "@/components/Vinyl";
 
@@ -60,13 +59,13 @@ export default function Home() {
   const filteredData = selectedItem || (query ? results[0] : placeholder);
 
   return (
-    <div className="flex flex-col items-center justify-evenly w-full mx-auto p-4 h-screen overflow-auto">
-      <Quote />
-      <div className="-mb-[5rem]">
+    <div className="flex flex-col items-center justify-Stretch w-full mx-auto min-h-screen overflow-auto">
+      <div className="mt-[2rem]">
         <Vinyl />
         <Title />
       </div>
-      <div className="mb-[20rem]">
+      <div className="flex-grow" />
+      <div className="h-[60%]">
         <SearchInput
           query={query}
           setQuery={setQuery}
@@ -83,7 +82,7 @@ export default function Home() {
         data={filteredData}
         onRandom={handleRandom}
       />
-
+      <div className="flex-grow" />
       <Footer />
     </div>
   );
