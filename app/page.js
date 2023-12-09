@@ -7,6 +7,7 @@ import useFuseSearch from "@/hooks/useFuseSearch";
 import SearchInput from "@/components/SearchInput";
 import Title from "@/components/Title";
 import Vinyl from "@/components/Vinyl";
+import OceanWave from "@/components/OceanWave";
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -56,7 +57,7 @@ export default function Home() {
     setRandomIndex(Math.floor(Math.random() * data.length));
   };
 
-  const filteredData = selectedItem || (query ? results[0] : placeholder);
+  const filteredData = selectedItem || (query ? results[0] : []);
 
   return (
     <div className="flex flex-col items-center w-full mx-auto min-h-screen overflow-auto">
@@ -83,6 +84,7 @@ export default function Home() {
         onRandom={handleRandom}
       />
       <div className="flex-grow" />
+
       <Footer />
     </div>
   );

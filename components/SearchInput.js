@@ -1,6 +1,7 @@
 import { BsSearchHeart } from "react-icons/bs";
 import { FaDice } from "react-icons/fa";
 import { PiEraserFill } from "react-icons/pi";
+
 const SearchInput = ({
   query,
   setQuery,
@@ -57,9 +58,6 @@ const SearchInput = ({
             {query ? <PiEraserFill size={25} /> : <FaDice size={25} />}
           </button>
         </div>
-      </div>
-      <div className=" mt-5 md:text-sm text-xs italic border-l-4 border-blue-500 pl-4">
-        <q className="quotes">使用指南：请勿在夜晚翻阅。</q>
       </div>
     </div>
   );

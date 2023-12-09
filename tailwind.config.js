@@ -8,7 +8,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        kleinBlue: "#001c83",
+        kleinBlue: "#130f94",
       },
     },
   },
