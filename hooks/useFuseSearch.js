@@ -6,7 +6,7 @@ const useFuseSearch = (data, query) => {
 
   useEffect(() => {
     const fuse = new Fuse(data, {
-      keys: ["中文", "英文", "解释"],
+      keys: ["中文", "英文", "出处"],
       threshold: 0.2,
     });
     if (query) {

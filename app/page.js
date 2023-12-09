@@ -59,7 +59,7 @@ export default function Home() {
   const filteredData = selectedItem || (query ? results[0] : placeholder);
 
   return (
-    <div className="flex flex-col items-center justify-Stretch w-full mx-auto min-h-screen overflow-auto">
+    <div className="flex flex-col items-center w-full mx-auto min-h-screen overflow-auto">
       <div className="flex-grow" />
       <div className="h-[10%]">
         <Vinyl />
