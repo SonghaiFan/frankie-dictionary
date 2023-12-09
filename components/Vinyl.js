@@ -56,7 +56,6 @@ const Vinyl = () => {
   const imageVariants = {
     playing: {
       rotate: 360,
-      filter: "grayscale(0%)",
       transition: { duration: 15, ease: "linear", repeat: Infinity },
     },
     paused: {
