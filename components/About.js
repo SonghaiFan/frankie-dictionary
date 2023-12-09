@@ -32,14 +32,14 @@ const About = () => {
             </button>
 
             <h2 className="text-xl md:text-3xl mb-2 text-left">
-              关于蓝字典
+              关于蓝色辞典
               <span className="mb-4 text-kleinBlue"> Blue Dictionary® </span>
             </h2>
 
             <div className="mb-[2.25rem]" />
             <div className="text-xs md:text-sm mb-2">
               <p className="mb-2">
-                在语言的众多层次中，词作为最基本的构成单元，其内涵和外延常被固化于传统的辞典解释之中。然而，语言作为一种动态而复杂的符号系统，其内在的涵义远远超出了表面的字面意义。蓝字典旨在探索并挑战这种传统的词义固化，通过解构视角重塑词汇的定义。
+                在语言的众多层次中，词作为最基本的构成单元，其内涵和外延常被固化于传统的辞典解释之中。然而，语言作为一种动态而复杂的符号系统，其内在的涵义远远超出了表面的字面意义。蓝色辞典旨在探索并挑战这种传统的词义固化，通过解构视角重塑词汇的定义。
               </p>
               <hr className="mb-4" />
               <p className="mb-2">

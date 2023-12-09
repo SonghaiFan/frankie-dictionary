@@ -19,7 +19,7 @@ const Footer = () => {
         </a>
       </div>
       <div className="text-sm mb-5">
-        <span>© 2023 蓝字典 Blue Dictionary®</span>
+        <span>© 2023 蓝色辞典 Blue Dictionary®</span>
       </div>
     </footer>
   );
