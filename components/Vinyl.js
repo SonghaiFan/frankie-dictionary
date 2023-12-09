@@ -91,7 +91,7 @@ const Vinyl = () => {
         alt="Blue_Photo"
         width={300}
         height={300}
-        className="absolute inset-0 w-full h-full object-cover rounded-full"
+        className="absolute inset-0 w-full h-full object-cover rounded-full cursor-pointer"
         style={{ position: "absolute", inset: 0 }}
       />
     </VinylCover>

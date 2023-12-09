@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { cardVariants, cardTransition, heartVariants } from "@/utils/motion";
 
 const BlueCard = ({ show, onClose, data }) => {
   const [liked, setLiked] = useState(false);
@@ -13,69 +14,14 @@ const BlueCard = ({ show, onClose, data }) => {
     setLiked(!liked);
   };
 
-  const cardStyle = {
-    transformOrigin: "center",
-  };
-
-  const cardVariants = {
-    hidden: {
-      scale: 0.5,
-      y: 1000,
-      opacity: 0,
-      rotateX: 90,
-      rotateY: 0,
-      rotateZ: -90,
-    },
-    visible: {
-      scale: 1,
-      y: 0,
-      opacity: 1,
-      rotateX: 0,
-      rotateY: 0,
-      rotateZ: 0,
-    },
-    exit: {
-      scale: 0.5,
-      y: 1000,
-      opacity: 0,
-      rotateX: 90,
-      rotateY: 0,
-      rotateZ: 90,
-    },
-  };
-
-  const heartVariants = {
-    hover: {
-      scale: 1.1,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-      },
-    },
-    click: {
-      scale: 0.9,
-      transition: {
-        type: "spring", // Use a spring animation for a smooth effect
-        stiffness: 300,
-        duration: 0.1,
-      },
-    },
-  };
-
-  // Transition settings
-  const transition = {
-    type: "spring",
-    stiffness: 500,
-    damping: 20,
-    mass: 1,
-    duration: 0.3,
-  };
-
-  // Dynamic styles for modal
   const modalStyle = {
     opacity: show ? 1 : 0,
     zIndex: show ? 100 : -1,
     transition: "opacity 0.3s ease",
+  };
+
+  const cardStyle = {
+    transformOrigin: "left bottom",
   };
 
   return (
@@ -91,7 +37,7 @@ const BlueCard = ({ show, onClose, data }) => {
         animate={show ? "visible" : "exit"}
         style={cardStyle}
         variants={cardVariants}
-        transition={transition}
+        transition={cardTransition}
       >
         {data && (
           <>
