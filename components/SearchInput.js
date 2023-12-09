@@ -12,7 +12,7 @@ const SearchInput = ({
 }) => {
   return (
     <div className="mb-4 w-full flex-row items-center m-auto">
-      <div className="flex flex-col md:flex-row">
+      <div className="flex flex-col items-center md:flex-row">
         <div className="relative mb-4 md:mb-0 md:mr-8">
           <div className="flex border border-gray-300 rounded-md">
             <button

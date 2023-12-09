@@ -1,18 +1,23 @@
 export const cardVariants = {
   hidden: {
-    y: -1000,
-    x: 0,
+    scale: 0.5,
+    y: 1000,
+    opacity: 0,
+    rotateX: 90,
+    rotateY: 0,
+    rotateZ: -90,
   },
   visible: {
+    scale: 1,
     y: 0,
-    x: 0,
+    opacity: 1,
     rotateX: 0,
     rotateY: 0,
     rotateZ: 0,
   },
   exit: {
+    scale: 0.5,
     y: 1000,
-    x: -1000,
     opacity: 0,
     rotateX: 90,
     rotateY: 0,
@@ -23,10 +28,10 @@ export const cardVariants = {
 // Transition settings
 export const cardTransition = {
   type: "spring",
-  stiffness: 800,
-  damping: 180,
-  mass: 10,
-  duration: 0.3,
+  stiffness: 300,
+  damping: 40,
+  mass: 2,
+  duration: 0.2,
 };
 
 export const heartVariants = {
