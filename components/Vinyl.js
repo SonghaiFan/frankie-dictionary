@@ -6,7 +6,7 @@ const VinylCover = ({ children }) => {
   return (
     <div className="flex justify-center bg-kleinBlue rounded mb-2 w-fit h-fit m-auto shadow-xl">
       <div
-        className={`relative md:w-[250px] md:h-[250px] w-[100px] h-[100px] rounded-full overflow-hidden `}
+        className={`relative md:w-[250px] md:h-[250px] w-[150px] h-[150px] rounded-full overflow-hidden `}
       >
         {children}
       </div>
@@ -98,9 +98,9 @@ const Vinyl = () => {
         src={`/images/Blue_Photo${randomIndex}.jpg`}
         onClick={toggleMusic}
         alt="Blue_Photo"
-        width={300}
-        height={300}
-        className="absolute inset-0 w-full h-full object-cover rounded-full cursor-pointer"
+        width={10}
+        height={10}
+        className="absolute inset-0 w-full h-full object-cover rounded-full cursor-pointer shadow-xl"
         style={{ position: "absolute", inset: 0 }}
       />
     </VinylCover>

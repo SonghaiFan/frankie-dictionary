@@ -7,7 +7,6 @@ import useFuseSearch from "@/hooks/useFuseSearch";
 import SearchInput from "@/components/SearchInput";
 import Title from "@/components/Title";
 import Vinyl from "@/components/Vinyl";
-import OceanWave from "@/components/OceanWave";
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -84,7 +83,6 @@ export default function Home() {
         onRandom={handleRandom}
       />
       <div className="flex-grow" />
-
       <Footer />
     </div>
   );
