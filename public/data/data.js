@@ -581,4 +581,10 @@ export const data = [
     释义: "盆景",
     出处: "海",
   },
+  {
+    中文: "马雅楠",
+    英文: "Christine",
+    释义: "一种生长在Port Phillip Bay的野生海苔",
+    出处: "海",
+  },
 ];
