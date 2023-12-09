@@ -51,19 +51,29 @@ const Vinyl = () => {
   const toggleMusic = () => {
     setPlaying(!playing);
   };
-
-  // Animation variants for rotating and scaling
-  const imageVariants = {
+  
+const imageVariants = {
     playing: {
       rotate: 360,
-      transition: { duration: 15, ease: "linear", repeat: Infinity },
+      filter: "grayscale(0%)",
+      transition: {
+          rotate: {
+              duration: 15,
+              ease: "linear",
+              repeat: Infinity, // Loop only for rotation
+          },
+          filter: {
+              duration: 0.5,
+              ease:"easeInOut" 
+          },
+      },
     },
     paused: {
       rotate: 0,
       filter: "grayscale(100%)",
       transition: { duration: 0.5, ease: "easeInOut" },
     },
-  };
+};
 
   // Hover variants
   const hoverVariants = {
