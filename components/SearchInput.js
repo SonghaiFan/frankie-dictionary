@@ -12,15 +12,9 @@ const SearchInput = ({
 }) => {
   return (
     <div className="mb-4 w-full flex-row items-center m-auto">
-      <div className="flex flex-col items-center md:flex-row">
+      <div className="flex flex-col md:flex-row items-center ">
         <div className="relative mb-4 md:mb-0 md:mr-8">
           <div className="flex border border-gray-300 rounded-md">
-            <button
-              onClick={onConfirm}
-              className="bg-kleinBlue text-white px-4 py-2 rounded-l-md hover:bg-blue-600 focus:outline-none transition-all ease-in-out duration-300"
-            >
-              <BsSearchHeart size={25} />
-            </button>
             <input
               className="flex-grow px-2 py-2 focus:outline-none rounded-l-md"
               value={query}
@@ -28,6 +22,12 @@ const SearchInput = ({
               type="text"
               placeholder={defaultText}
             />
+            <button
+              onClick={onConfirm}
+              className="bg-kleinBlue text-white px-4 py-2 rounded-r-md hover:bg-blue-600 focus:outline-none transition-all ease-in-out duration-300"
+            >
+              <BsSearchHeart size={25} />
+            </button>
           </div>
 
           {query && (
