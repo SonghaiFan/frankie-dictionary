@@ -5,15 +5,10 @@ const Footer = () => {
       <OceanWave />
       <footer className="w-full bg-kleinBlue text-white text-sm text-center p-2 md:p-4 bottom-0">
         <div>
-          <span>Contributors: </span>(
+          <span>Made by: </span>
           <a href="#" className="text-blue-300">
             范松海Frank
           </a>
-          |
-          <a href="#" className="text-blue-300">
-            海苔Chrispy
-          </a>
-          )
         </div>
         <div className="text-sm">
           Acknowledgement:
