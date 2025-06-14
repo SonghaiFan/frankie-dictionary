@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { data } from "@/public/data/data";
 
-function ParticleRain() {
+function ParticleRain({ isActive = false }) {
   const canvasRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const particlesRef = useRef([]);
@@ -32,7 +32,8 @@ function ParticleRain() {
     // Initialize particles
     const initParticles = () => {
       particlesRef.current = [];
-      const particleCount = Math.floor(dimensions.width / 20); // Slightly less dense
+      // More particles when music is active
+      const particleCount = Math.floor(dimensions.width / (isActive ? 15 : 25));
 
       for (let i = 0; i < particleCount; i++) {
         createParticle();
@@ -41,23 +42,26 @@ function ParticleRain() {
 
     const createParticle = () => {
       const wordData = data[Math.floor(Math.random() * data.length)];
-      const useChineseWord = Math.random() > 0.4; // Slightly favor Chinese words
+      const useChineseWord = Math.random() > 0.4;
       const text = useChineseWord ? wordData.中文 : wordData.英文;
 
       const particle = {
         x: Math.random() * dimensions.width,
-        y: -100 - Math.random() * 500, // Start higher for more natural appearance
+        y: -100 - Math.random() * 500,
         text: text,
         isChinese: useChineseWord,
-        speed: Math.random() * 1.5 + 0.8, // Slightly slower for readability
+        // Faster and more dynamic when music is active
+        speed: Math.random() * (isActive ? 2.5 : 1) + (isActive ? 1.2 : 0.8),
         rotation: Math.random() * 360,
-        rotationSpeed: (Math.random() - 0.5) * 2, // Slower rotation
-        opacity: Math.random() * 0.4 + 0.2, // Lower opacity for subtlety
-        fontSize: Math.random() * 12 + 10, // Smaller font sizes
+        rotationSpeed: (Math.random() - 0.5) * (isActive ? 4 : 2),
+        // More visible when music is active
+        opacity:
+          Math.random() * (isActive ? 0.6 : 0.3) + (isActive ? 0.3 : 0.1),
+        fontSize: Math.random() * 12 + 10,
         color: `hsl(${Math.random() * 40 + 200}, ${Math.random() * 30 + 50}%, ${
           Math.random() * 25 + 60
-        }%)`, // More subtle blues
-        drift: (Math.random() - 0.5) * 0.3, // Less drift
+        }%)`,
+        drift: (Math.random() - 0.5) * (isActive ? 0.5 : 0.2),
         fadeIn: 0,
         maxFadeIn: Math.random() * 100 + 50,
       };
@@ -66,6 +70,17 @@ function ParticleRain() {
     };
 
     const updateParticles = () => {
+      // Only minimal movement when not active
+      if (!isActive) {
+        particlesRef.current.forEach((particle) => {
+          // Very slow drift when not active
+          particle.y += particle.speed * 0.3;
+          particle.x += particle.drift * 0.3;
+          particle.rotation += particle.rotationSpeed * 0.3;
+        });
+        return;
+      }
+
       particlesRef.current.forEach((particle, index) => {
         particle.y += particle.speed;
         particle.x += particle.drift;
@@ -100,8 +115,11 @@ function ParticleRain() {
         // Calculate fade opacity
         const fadeOpacity = Math.min(particle.fadeIn / particle.maxFadeIn, 1);
 
+        // Enhanced visibility when active
+        const activeOpacity = isActive ? 1 : 0.4;
+
         // Set particle properties
-        ctx.globalAlpha = particle.opacity * fadeOpacity;
+        ctx.globalAlpha = particle.opacity * fadeOpacity * activeOpacity;
         ctx.fillStyle = particle.color;
 
         // Use appropriate font based on text type
@@ -116,9 +134,9 @@ function ParticleRain() {
         ctx.translate(particle.x, particle.y);
         ctx.rotate((particle.rotation * Math.PI) / 180);
 
-        // Add subtle glow effect
+        // Enhanced glow effect when active
         ctx.shadowColor = particle.color;
-        ctx.shadowBlur = 3;
+        ctx.shadowBlur = isActive ? 5 : 1;
 
         // Draw the text
         ctx.fillText(particle.text, 0, 0);
@@ -141,7 +159,7 @@ function ParticleRain() {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [dimensions]);
+  }, [dimensions, isActive]);
 
   return (
     <canvas
@@ -151,7 +169,7 @@ function ParticleRain() {
       className="fixed inset-0 pointer-events-none z-0"
       style={{
         background: "transparent",
-        mixBlendMode: "multiply", // Subtle blend mode for better integration
+        mixBlendMode: "multiply",
       }}
     />
   );

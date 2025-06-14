@@ -13,12 +13,42 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [isVinylPlaying, setIsVinylPlaying] = useState(false);
 
   const [randomIndex, setRandomIndex] = useState(0);
 
   useEffect(() => {
     setRandomIndex(Math.floor(Math.random() * data.length));
   }, []);
+
+  // Global keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // ESC key closes modal if open
+      if (e.key === "Escape" && showExplanation) {
+        e.preventDefault();
+        handleCloseModal();
+      }
+
+      // Ctrl/Cmd + K focuses search input
+      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+        e.preventDefault();
+        const searchInput = document.querySelector('input[type="text"]');
+        if (searchInput) {
+          searchInput.focus();
+        }
+      }
+
+      // Ctrl/Cmd + R for random word (when modal is not open)
+      if ((e.ctrlKey || e.metaKey) && e.key === "r" && !showExplanation) {
+        e.preventDefault();
+        handleRandom();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [showExplanation]);
 
   const placeholder = data[randomIndex];
   const results = useFuseSearch(data, query);
@@ -57,17 +87,21 @@ export default function Home() {
     setRandomIndex(Math.floor(Math.random() * data.length));
   };
 
+  const handleVinylPlayingChange = (playing) => {
+    setIsVinylPlaying(playing);
+  };
+
   const filteredData = selectedItem || (query ? results[0] : []);
 
   return (
     <div className="flex flex-col items-center w-full mx-auto min-h-screen overflow-auto relative">
       {/* Particle Rain Background */}
-      <ParticleRain />
+      <ParticleRain isActive={isVinylPlaying} />
 
       {/* Main Content */}
       <div className="flex-grow" />
       <div className="h-[10%] relative z-10">
-        <Vinyl />
+        <Vinyl onPlayingChange={handleVinylPlayingChange} />
         <Title />
       </div>
       <div className="h-[40%] mb-[10%] relative z-10">
@@ -89,6 +123,15 @@ export default function Home() {
       />
       <div className="flex-grow" />
       <Footer />
+
+      {/* Keyboard shortcuts hint */}
+      {!showExplanation && (
+        <div className="fixed bottom-4 right-4 text-xs text-gray-400 bg-white bg-opacity-80 px-3 py-2 rounded-lg shadow-md opacity-60 hover:opacity-100 transition-opacity">
+          <div>⌘K / Ctrl+K: Focus search</div>
+          <div>⌘R / Ctrl+R: Random word</div>
+          <div>ESC: Close modal</div>
+        </div>
+      )}
     </div>
   );
 }

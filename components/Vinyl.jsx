@@ -14,7 +14,7 @@ const VinylCover = ({ children }) => {
   );
 };
 
-const Vinyl = () => {
+const Vinyl = ({ onPlayingChange }) => {
   const [randomIndex, setRandomIndex] = useState(null);
   const [playing, setPlaying] = useState(false);
 
@@ -46,7 +46,12 @@ const Vinyl = () => {
     } else if (audioRef.current) {
       audioRef.current.pause();
     }
-  }, [playing]);
+
+    // Notify parent component of playing state change
+    if (onPlayingChange) {
+      onPlayingChange(playing);
+    }
+  }, [playing, onPlayingChange]);
 
   const toggleMusic = () => {
     setPlaying(!playing);
