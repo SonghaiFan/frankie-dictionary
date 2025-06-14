@@ -14,6 +14,7 @@ export default function Home() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [isVinylPlaying, setIsVinylPlaying] = useState(false);
+  const [isRandomWord, setIsRandomWord] = useState(false);
 
   const [randomIndex, setRandomIndex] = useState(0);
 
@@ -57,6 +58,7 @@ export default function Home() {
     setShowExplanation(true);
     setSelectedItem(item);
     setQuery(item.中文);
+    setIsRandomWord(false);
   };
 
   const handleOpenModal = () => {
@@ -67,24 +69,32 @@ export default function Home() {
     if (results.length === 0 && !query) {
       setShowExplanation(true);
       setSelectedItem(placeholder);
+      setIsRandomWord(true);
       return;
     }
 
     if (results.length > 0 && results[0].中文 === query) {
       setShowExplanation(true);
       setSelectedItem(results[0]);
+      setIsRandomWord(false);
     }
   };
 
   const handleCloseModal = () => {
     setShowExplanation(false);
     setSelectedItem(null);
+
+    if (isRandomWord) {
+      setRandomIndex(Math.floor(Math.random() * data.length));
+      setIsRandomWord(false);
+    }
   };
 
   const handleRandom = () => {
     setSelectedItem(null);
     setQuery("");
     setRandomIndex(Math.floor(Math.random() * data.length));
+    setIsRandomWord(false);
   };
 
   const handleVinylPlayingChange = (playing) => {
@@ -95,9 +105,6 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center w-full mx-auto min-h-screen overflow-auto relative">
-      {/* Particle Rain Background */}
-      <ParticleRain isActive={isVinylPlaying} />
-
       {/* Main Content */}
       <div className="flex-grow" />
       <div className="h-[10%] relative z-10">
@@ -123,6 +130,9 @@ export default function Home() {
       />
       <div className="flex-grow" />
       <Footer />
+
+      {/* Particle Rain Background */}
+      <ParticleRain isActive={isVinylPlaying} />
 
       {/* Keyboard shortcuts hint */}
       {!showExplanation && (

@@ -1,5 +1,4 @@
 import { BsSearchHeart } from "react-icons/bs";
-import { FaDice } from "react-icons/fa";
 import { PiEraserFill } from "react-icons/pi";
 import { useState, useRef, useEffect } from "react";
 
@@ -21,7 +20,7 @@ const SearchInput = ({
   const handleKeyDown = (e) => {
     if (!query || results.length === 0) {
       if (e.key === "Enter") {
-        onConfirm();
+        onConfirm(); // This will open random word modal when no search is active
       }
       return;
     }
@@ -50,6 +49,8 @@ const SearchInput = ({
         setQuery("");
         setSelectedIndex(-1);
         inputRef.current?.blur();
+        // Generate new random placeholder when clearing
+        onRandom();
         break;
     }
   };
@@ -82,17 +83,21 @@ const SearchInput = ({
     onSelect(item);
   };
 
-  // Smart button handler - handles search, random, and clear
+  // Smart button handler - handles search and clear only
   const handleButtonClick = () => {
     if (!query) {
-      // No query: Random function
-      onRandom();
+      // No query: Search function (will open random word modal)
+      onConfirm();
     } else if (results.length > 0) {
       // Has query with results: Search function
       onConfirm();
     } else {
       // Has query but no results: Clear function
-      onRandom(); // This clears the query
+      setQuery("");
+      setSelectedIndex(-1);
+      inputRef.current?.focus();
+      // Generate new random placeholder when clearing
+      onRandom();
     }
   };
 
@@ -100,8 +105,8 @@ const SearchInput = ({
   const getButtonContent = () => {
     if (!query) {
       return {
-        icon: <FaDice size={22} />,
-        title: "Random word",
+        icon: <BsSearchHeart size={22} />,
+        title: "Explore random word",
       };
     } else if (results.length > 0) {
       return {
