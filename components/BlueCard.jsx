@@ -564,21 +564,20 @@ const BlueCard = ({
             variants={cardVariants}
             transition={cardTransition}
           >
-            {/* Close button - positioned at top left */}
-            <motion.button
-              initial="idle"
-              whileHover="hover"
-              whileTap="click"
-              variants={closeVariants}
-              className="absolute bottom-2 left-2 text-white/60 hover:text-white px-3 py-3 md:px-4 md:py-2 rounded-md focus:outline-none z-10"
-              onClick={handleClose}
-              title="关闭 (Esc) / Close"
-            >
-              <FaTimes size={20} />
-            </motion.button>
-
             {/* Action buttons - vertical on mobile, horizontal on desktop */}
             <div className="absolute top-2 right-2 flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0">
+              <motion.button
+                initial="idle"
+                whileHover="hover"
+                whileTap="click"
+                variants={closeVariants}
+                className="text-white/20 px-3 py-3 md:px-4 md:py-2 rounded-md focus:outline-none disabled:opacity-50"
+                onClick={handleClose}
+                title="关闭 (Esc) / Close"
+              >
+                <FaTimes size={20} />
+              </motion.button>
+
               <motion.button
                 initial="idle"
                 animate={isExporting ? "exporting" : "idle"}
