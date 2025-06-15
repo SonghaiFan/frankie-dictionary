@@ -16,8 +16,8 @@ function ParticleRain() {
   // Cache font strings
   const fontCache = useMemo(
     () => ({
-      chinese: '10px "Noto Serif SC", serif',
-      english: "10px Inter, sans-serif",
+      chinese: '20px "Noto Serif SC", serif',
+      english: "20px Inter, sans-serif",
     }),
     []
   );
