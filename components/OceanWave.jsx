@@ -10,7 +10,7 @@ const CONFIG = {
       amplitude: 25,
       frequency: 0.015,
       baseY: 120,
-      speed: 0.003,
+      speed: 0.001,
       opacity: 0.9,
       color: "#130f94", // kleinBlue
     },
@@ -18,7 +18,7 @@ const CONFIG = {
       amplitude: 20,
       frequency: 0.02,
       baseY: 110,
-      speed: 0.004,
+      speed: 0.0015,
       opacity: 0.7,
       color: "#130f94", // kleinBlue
     },
@@ -26,7 +26,7 @@ const CONFIG = {
       amplitude: 15,
       frequency: 0.025,
       baseY: 100,
-      speed: 0.005,
+      speed: 0.002,
       opacity: 0.5,
       color: "#130f94", // kleinBlue
     },
@@ -104,7 +104,7 @@ export default function OceanWave() {
       // Only update if enough time has passed (target 60fps)
       if (deltaTime > 16) {
         CONFIG.waves.forEach((wave, index) => {
-          const speedMultiplier = isPlaying ? 1.5 : 1;
+          const speedMultiplier = isPlaying ? 1.2 : 0.5;
           const phase = timestamp * wave.speed * speedMultiplier;
           const d = calculateWavePath(phase, wave);
 
