@@ -13,6 +13,9 @@ function ParticleRain() {
   const lastFrameTimeRef = useRef(0);
   const { isPlaying } = usePlayback();
 
+  // Footer height constant (120px for OceanWave + padding)
+  const FOOTER_HEIGHT = 120;
+
   // Debounced resize handler
   const debouncedResize = useCallback(
     debounce(() => {
@@ -126,7 +129,8 @@ function ParticleRain() {
           particle.fadeIn += 2;
         }
 
-        if (particle.y > dimensions.height + 100) {
+        // Remove particle when it reaches the footer area
+        if (particle.y > dimensions.height - FOOTER_HEIGHT) {
           particle.active = false;
           const newParticle = getParticleFromPool();
           if (newParticle) {
