@@ -669,7 +669,7 @@ const BlueCard = ({
             style={{ touchAction: "pan-y" }}
           >
             {/* Action buttons - vertical on mobile, horizontal on desktop */}
-            <div className="absolute top-2 right-2 flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0">
+            <div className="absolute top-2 right-2 flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0 z-10">
               <motion.button
                 initial="idle"
                 whileHover="hover"
@@ -764,7 +764,7 @@ const BlueCard = ({
               </motion.button>
             </div>
 
-            <div className="flex flex-col h-full min-h-[500px] pl-4 pr-8 py-4 md:pl-6 md:pr-12 md:py-6 text-left">
+            <div className="flex flex-col h-full min-h-[500px] pl-4 pr-16 py-4 md:pl-6 md:pr-12 md:py-6 text-left">
               {/* Top section with words */}
               <div className="space-y-6">
                 {/* Chinese word - large and prominent */}
@@ -780,11 +780,11 @@ const BlueCard = ({
 
               {/* Middle section with definitions */}
               <div className="flex-1 flex flex-col justify-center space-y-6">
-                <div className="text-lg md:text-2xl font-light leading-relaxed noto-serif-sc-regular">
+                <div className="text-lg md:text-2xl font-light leading-relaxed noto-serif-sc-regular break-words">
                   释义：{currentData.释义}
                 </div>
                 {currentData.英文释义 && (
-                  <div className="text-base md:text-xl leading-relaxed opacity-90 homemade-apple-regular">
+                  <div className="text-base md:text-xl leading-relaxed opacity-90 homemade-apple-regular break-words">
                     Paraphrase: {currentData.英文释义}
                   </div>
                 )}
