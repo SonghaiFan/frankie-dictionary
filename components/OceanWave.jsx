@@ -1,4 +1,4 @@
-import { motion, useAnimationFrame } from "framer-motion";
+import { useAnimationFrame } from "framer-motion";
 import { useRef, useMemo, useCallback, useEffect } from "react";
 import { usePlayback } from "@/contexts/PlaybackContext";
 
@@ -8,30 +8,46 @@ const CONFIG = {
   waves: [
     {
       amplitude: 25,
-      frequency: 0.015,
-      baseY: 120,
-      speed: 1.0,
-      opacity: 0.9,
-      color: "#130f94", // kleinBlue
+      frequency: 0.004,
+      baseY: 140,
+      speed: 0.6,
+      opacity: 1,
+      color: "#0a0870", // 更深的蓝色
+      noise: 0.5,
+      phaseOffset: 0,
     },
     {
-      amplitude: 20,
-      frequency: 0.02,
-      baseY: 110,
-      speed: 1.5,
+      amplitude: 30,
+      frequency: 0.003,
+      baseY: 135,
+      speed: 0.4,
+      opacity: 0.85,
+      color: "#0d0a8a",
+      noise: 0.45,
+      phaseOffset: Math.PI / 4,
+    },
+    {
+      amplitude: 35,
+      frequency: 0.002,
+      baseY: 130,
+      speed: 0.3,
       opacity: 0.7,
-      color: "#130f94", // kleinBlue
+      color: "#130f94",
+      noise: 0.4,
+      phaseOffset: Math.PI / 2,
     },
     {
-      amplitude: 15,
-      frequency: 0.025,
-      baseY: 100,
-      speed: 2.0,
-      opacity: 0.5,
-      color: "#130f94", // kleinBlue
+      amplitude: 40,
+      frequency: 0.001,
+      baseY: 125,
+      speed: 0.2,
+      opacity: 0.55,
+      color: "#1a16b3",
+      noise: 0.35,
+      phaseOffset: Math.PI * 0.75,
     },
   ],
-  pointStep: 1.5,
+  pointStep: 1.2, // Reduced for smoother curves
 };
 
 export default function OceanWave() {
@@ -39,6 +55,7 @@ export default function OceanWave() {
   const { isPlaying } = usePlayback();
   const lastTimeRef = useRef(0);
   const animationFrameRef = useRef(null);
+  const noiseOffsetsRef = useRef(CONFIG.waves.map(() => Math.random() * 1000));
 
   // Memoize gradient definitions
   const gradientDefinitions = useMemo(() => {
@@ -77,19 +94,42 @@ export default function OceanWave() {
     ));
   }, []);
 
-  // Optimize wave path calculation
-  const calculateWavePath = useCallback((phase, waveConfig) => {
-    const points = [];
-    for (let x = 0; x <= CONFIG.width; x += CONFIG.pointStep) {
-      const y =
-        waveConfig.baseY +
-        Math.sin(x * waveConfig.frequency + phase) * waveConfig.amplitude;
-      points.push(`${x},${y}`);
-    }
-    return `M${points.join(" L")} L${CONFIG.width},${CONFIG.height} L0,${
-      CONFIG.height
-    } Z`;
+  // Simplex noise function for natural wave movement
+  const noise = useCallback((x, y) => {
+    return Math.sin(x * 0.1 + y * 0.1) * Math.cos(x * 0.05 - y * 0.05);
   }, []);
+
+  // Optimize wave path calculation with noise
+  const calculateWavePath = useCallback(
+    (phase, waveConfig, noiseOffset) => {
+      const points = [];
+      for (let x = 0; x <= CONFIG.width; x += CONFIG.pointStep) {
+        // Add multiple sine waves with different frequencies for more natural movement
+        const baseWave = Math.sin(
+          x * waveConfig.frequency + phase + waveConfig.phaseOffset
+        );
+        const secondaryWave =
+          Math.sin(x * waveConfig.frequency * 1.5 + phase * 0.8) * 0.3;
+        const tertiaryWave =
+          Math.sin(x * waveConfig.frequency * 0.5 + phase * 1.2) * 0.2;
+
+        // Add noise for more organic movement
+        const noiseValue =
+          noise(x * 0.01 + noiseOffset, phase * 0.01) * waveConfig.noise;
+
+        const y =
+          waveConfig.baseY +
+          (baseWave + secondaryWave + tertiaryWave + noiseValue) *
+            waveConfig.amplitude;
+
+        points.push(`${x},${y}`);
+      }
+      return `M${points.join(" L")} L${CONFIG.width},${CONFIG.height} L0,${
+        CONFIG.height
+      } Z`;
+    },
+    [noise]
+  );
 
   // Optimize animation frame updates
   const updateWaves = useCallback(
@@ -107,7 +147,15 @@ export default function OceanWave() {
           const speedMultiplier = isPlaying ? 1.2 : 0.5;
           const baseSpeed = 0.001; // Base speed factor
           const phase = timestamp * baseSpeed * wave.speed * speedMultiplier;
-          const d = calculateWavePath(phase, wave);
+
+          // Update noise offset for continuous movement
+          noiseOffsetsRef.current[index] += 0.01;
+
+          const d = calculateWavePath(
+            phase,
+            wave,
+            noiseOffsetsRef.current[index]
+          );
 
           if (waveRefs.current[index]) {
             waveRefs.current[index].setAttribute("d", d);
@@ -157,18 +205,11 @@ export default function OceanWave() {
 
         {/* Render multiple wave layers */}
         {CONFIG.waves.map((wave, index) => (
-          <motion.path
+          <path
             key={index}
             ref={(el) => (waveRefs.current[index] = el)}
             fill={`url(#waveGradient-${index})`}
             filter="url(#waveShadow)"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{
-              duration: 1.5,
-              delay: index * 0.2,
-              ease: "easeOut",
-            }}
           />
         ))}
       </svg>
