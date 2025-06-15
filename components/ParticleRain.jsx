@@ -13,8 +13,8 @@ function ParticleRain() {
   const lastFrameTimeRef = useRef(0);
   const { isPlaying } = usePlayback();
 
-  // Footer height constant (120px for OceanWave + padding)
-  const FOOTER_HEIGHT = 100;
+  // Footer height constant
+  const FOOTER_HEIGHT = 50;
 
   // Cache font strings
   const fontCache = useMemo(
