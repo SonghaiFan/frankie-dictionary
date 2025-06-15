@@ -4,9 +4,9 @@ const WAVE_CONFIG = {
   width: 500,
   height: 400,
   amplitude: 60,
-  frequency: 0.01,
-  baseY: 100,
-  pointStep: 2,
+  frequency: 0.015,
+  baseY: 120,
+  pointStep: 4,
 };
 
 function calculateDuration(frequency) {
@@ -32,12 +32,16 @@ function generateWavePath(phase = 0) {
 
 const OceanWave = () => {
   const duration = calculateDuration(WAVE_CONFIG.frequency);
+  const initialPath = generateWavePath(0);
 
   // Animate control points of the wave
   const waveVariants = {
+    initial: {
+      d: initialPath,
+    },
     animate: {
       d: [
-        generateWavePath(0),
+        initialPath,
         generateWavePath(Math.PI / 2),
         generateWavePath(Math.PI),
         generateWavePath(Math.PI * 1.5),
@@ -60,7 +64,7 @@ const OceanWave = () => {
         preserveAspectRatio="none"
       >
         <motion.path
-          initial={{ d: generateWavePath(0) }}
+          initial="initial"
           animate="animate"
           variants={waveVariants}
           fill="#130f94"
