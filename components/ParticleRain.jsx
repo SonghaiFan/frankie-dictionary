@@ -12,21 +12,22 @@ function ParticleRain() {
   const particlePoolRef = useRef([]);
   const lastFrameTimeRef = useRef(0);
   const { isPlaying } = usePlayback();
-  const footerRef = useRef(null);
-  const [footerHeight, setFooterHeight] = useState(0);
-  const [isFooterVisible, setIsFooterVisible] = useState(true);
-
-  // Footer height constant
-  const FOOTER_HEIGHT = 50;
 
   // Cache font strings
   const fontCache = useMemo(
     () => ({
-      chinese: '20px "Noto Serif SC", serif',
-      english: "20px Inter, sans-serif",
+      chinese: '10px "Noto Serif SC", serif',
+      english: "10px Inter, sans-serif",
     }),
     []
   );
+
+  // Performance measurement
+  const performanceRef = useRef({
+    drawTime: 0,
+    frameCount: 0,
+    lastLog: 0,
+  });
 
   // Debounced resize handler
   const debouncedResize = useCallback(
@@ -52,40 +53,6 @@ function ParticleRain() {
       debouncedResize.cancel();
     };
   }, [debouncedResize]);
-
-  // Observe footer height and visibility
-  useEffect(() => {
-    const footer = document.querySelector("footer");
-    if (!footer) return;
-
-    footerRef.current = footer;
-
-    // Create ResizeObserver to track footer height changes
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const height = entry.contentRect.height;
-        setFooterHeight(height);
-      }
-    });
-
-    // Create IntersectionObserver to track footer visibility
-    const intersectionObserver = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          setIsFooterVisible(entry.isIntersecting);
-        }
-      },
-      { threshold: 0 }
-    );
-
-    resizeObserver.observe(footer);
-    intersectionObserver.observe(footer);
-
-    return () => {
-      resizeObserver.disconnect();
-      intersectionObserver.disconnect();
-    };
-  }, []);
 
   // Initialize particle pool
   const initParticlePool = useCallback(() => {
@@ -175,19 +142,18 @@ function ParticleRain() {
           particle.fadeIn += 2;
         }
 
-        // Only remove particles when footer is visible and particle reaches it
-        if (isFooterVisible && particle.y > dimensions.height - footerHeight) {
+        // Remove particle when it's out of viewport
+        if (
+          particle.y > dimensions.height + 100 || // Below viewport
+          particle.y < -100 || // Above viewport
+          particle.x > dimensions.width + 100 || // Right of viewport
+          particle.x < -100 // Left of viewport
+        ) {
           particle.active = false;
           const newParticle = getParticleFromPool();
           if (newParticle) {
             particlesRef.current[index] = newParticle;
           }
-        }
-
-        if (particle.x > dimensions.width + 100) {
-          particle.x = -100;
-        } else if (particle.x < -100) {
-          particle.x = dimensions.width + 100;
         }
       });
     };
@@ -256,15 +222,7 @@ function ParticleRain() {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [
-    dimensions,
-    isPlaying,
-    initParticlePool,
-    getParticleFromPool,
-    fontCache,
-    footerHeight,
-    isFooterVisible,
-  ]);
+  }, [dimensions, isPlaying, initParticlePool, getParticleFromPool, fontCache]);
 
   return (
     <canvas
