@@ -5,6 +5,7 @@ import {
   FaDownload,
   FaRandom,
   FaShare,
+  FaTimes,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { cardVariants, cardTransition } from "@/utils/motion";
@@ -25,8 +26,8 @@ const BlueCard = ({
   const cardRef = useRef(null);
 
   // Touch/swipe state
-  const [touchStart, setTouchStart] = useState(null);
-  const [touchEnd, setTouchEnd] = useState(null);
+  const [touchStart, setTouchStart] = useState({ x: null, y: null });
+  const [touchEnd, setTouchEnd] = useState({ x: null, y: null });
 
   // Minimum swipe distance (in px)
   const minSwipeDistance = 50;
@@ -63,27 +64,51 @@ const BlueCard = ({
 
   // Touch event handlers for swipe detection
   const onTouchStart = (e) => {
-    setTouchEnd(null); // otherwise the swipe is fired even with usual touch events
-    setTouchStart(e.targetTouches[0].clientX);
+    setTouchEnd({ x: null, y: null }); // otherwise the swipe is fired even with usual touch events
+    setTouchStart({
+      x: e.targetTouches[0].clientX,
+      y: e.targetTouches[0].clientY,
+    });
   };
 
   const onTouchMove = (e) => {
-    setTouchEnd(e.targetTouches[0].clientX);
+    setTouchEnd({
+      x: e.targetTouches[0].clientX,
+      y: e.targetTouches[0].clientY,
+    });
   };
 
   const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
+    if (!touchStart.x || !touchEnd.x || !touchStart.y || !touchEnd.y) return;
 
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
+    const distanceX = touchStart.x - touchEnd.x;
+    const distanceY = touchStart.y - touchEnd.y;
+    const isLeftSwipe = distanceX > minSwipeDistance;
+    const isRightSwipe = distanceX < -minSwipeDistance;
+    const isDownSwipe = distanceY < -minSwipeDistance;
 
-    if (isLeftSwipe) {
-      // Swipe left = next word
-      handleNextWord();
-    } else if (isRightSwipe) {
-      // Swipe right = previous word
-      handlePreviousWord();
+    // Prioritize vertical swipes over horizontal ones
+    if (Math.abs(distanceY) > Math.abs(distanceX)) {
+      if (isDownSwipe) {
+        // Swipe down = close modal
+        handleClose();
+      }
+    } else {
+      // Horizontal swipes for navigation
+      if (isLeftSwipe) {
+        // Swipe left = next word
+        handleNextWord();
+      } else if (isRightSwipe) {
+        // Swipe right = previous word
+        handlePreviousWord();
+      }
+    }
+  };
+
+  const handleClose = () => {
+    onClose();
+    if (onClearSearch) {
+      onClearSearch();
     }
   };
 
@@ -125,11 +150,7 @@ const BlueCard = ({
           break;
         case "Escape":
           e.preventDefault();
-          // Close modal and clear search
-          onClose();
-          if (onClearSearch) {
-            onClearSearch();
-          }
+          handleClose();
           break;
       }
     };
@@ -485,6 +506,37 @@ const BlueCard = ({
     },
   };
 
+  // Close button animation variants
+  const closeVariants = {
+    idle: {
+      scale: 1,
+      rotate: 0,
+      filter: "drop-shadow(0 0 0px rgba(255, 255, 255, 0))",
+      transition: {
+        duration: 0.3,
+        ease: "easeOut",
+      },
+    },
+    hover: {
+      scale: 1.1,
+      rotate: 90,
+      filter: "drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))",
+      transition: {
+        duration: 0.3,
+        ease: "easeOut",
+      },
+    },
+    click: {
+      scale: [1, 1.2, 0.95, 1],
+      rotate: [0, 180, 360],
+      filter: "drop-shadow(0 0 12px rgba(255, 255, 255, 0.8))",
+      transition: {
+        duration: 0.4,
+        ease: "easeOut",
+      },
+    },
+  };
+
   const modalStyle = {
     opacity: show ? 1 : 0,
     zIndex: show ? 100 : -1,
@@ -494,7 +546,7 @@ const BlueCard = ({
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-90 backdrop-blur flex flex-col items-center justify-center z-50"
-      onClick={onClose}
+      onClick={handleClose}
       style={modalStyle}
     >
       {currentData && (
@@ -512,6 +564,19 @@ const BlueCard = ({
             variants={cardVariants}
             transition={cardTransition}
           >
+            {/* Close button - positioned at top left */}
+            <motion.button
+              initial="idle"
+              whileHover="hover"
+              whileTap="click"
+              variants={closeVariants}
+              className="absolute bottom-2 left-2 text-white/60 hover:text-white px-3 py-3 md:px-4 md:py-2 rounded-md focus:outline-none z-10"
+              onClick={handleClose}
+              title="关闭 (Esc) / Close"
+            >
+              <FaTimes size={20} />
+            </motion.button>
+
             {/* Action buttons - vertical on mobile, horizontal on desktop */}
             <div className="absolute top-2 right-2 flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0">
               <motion.button
