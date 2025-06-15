@@ -133,6 +133,7 @@ const BlueCard = ({
     const isLeftSwipe = distanceX > minSwipeDistance;
     const isRightSwipe = distanceX < -minSwipeDistance;
     const isUpSwipe = distanceY > minSwipeDistance;
+    const isDownSwipe = distanceY < -minSwipeDistance;
 
     // Check if it's a tap (minimal movement)
     const isTap = Math.abs(distanceX) < 10 && Math.abs(distanceY) < 10;
@@ -145,6 +146,8 @@ const BlueCard = ({
     if (Math.abs(distanceY) > Math.abs(distanceX)) {
       if (isUpSwipe) {
         handleClose();
+      } else if (isDownSwipe) {
+        handleShuffle();
       }
     } else {
       if (isLeftSwipe) {
