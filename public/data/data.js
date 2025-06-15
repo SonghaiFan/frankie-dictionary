@@ -4,7 +4,7 @@ export const data = [
     英文: "Blue Dictionary",
     释义: "文字游戏",
     英文释义: "A game of words",
-    出处: "海",
+    出处: "fan海",
   },
   {
     中文: "生日",
@@ -570,7 +570,7 @@ export const data = [
     英文: "Music",
     释义: "避难所的酒水",
     英文释义: "Liquor of the sanctuary",
-    出处: "海",
+    出处: "范松海",
   },
   {
     中文: "沉默",
@@ -662,7 +662,7 @@ export const data = [
     英文: "Afternoon",
     释义: "盆景",
     英文释义: "Bonsai",
-    出处: "海",
+    出处: "范松海",
   },
   {
     中文: "复合",
@@ -754,7 +754,7 @@ export const data = [
     英文: "Artificial rain",
     释义: "诗的另一种读法",
     英文释义: "Another reading of poetry",
-    出处: "海",
+    出处: "范松海",
   },
   {
     中文: "宿命",
@@ -782,7 +782,7 @@ export const data = [
     英文: "Dog",
     释义: "一种不会说话的人",
     英文释义: "A person who doesn't speak",
-    出处: "海",
+    出处: "范松海",
   },
   {
     中文: "早饭",
@@ -810,7 +810,7 @@ export const data = [
     英文: "Doctor",
     释义: "病得不够严重的病人",
     英文释义: "A patient who is not sick enough",
-    出处: "海",
+    出处: "范松海",
   },
   {
     中文: "战争",
@@ -838,7 +838,7 @@ export const data = [
     英文: "Thesis",
     释义: "矩形的月亮",
     英文释义: "A rectangular moon",
-    出处: "海",
+    出处: "范松海",
   },
   {
     中文: "痛苦",
@@ -1028,13 +1028,6 @@ export const data = [
     英文: "Phone",
     释义: "体外器官移植手术",
     英文释义: "Organ transplant surgery outside the body",
-    出处: "蓝色词典ai",
-  },
-  {
-    中文: "眼泪",
-    英文: "Tear",
-    释义: "灵魂的潮汐",
-    英文释义: "The tide of the soul",
     出处: "蓝色词典ai",
   },
   {
