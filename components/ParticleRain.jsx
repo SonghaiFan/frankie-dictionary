@@ -125,7 +125,7 @@ function ParticleRain() {
     };
 
     const updateParticles = (deltaTime) => {
-      const speedMultiplier = isPlaying ? 1 : 0.3;
+      const speedMultiplier = isPlaying ? 0.5 : 0.1;
 
       particlesRef.current.forEach((particle, index) => {
         if (!particle.active) return;
