@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { data } from "@/public/data/data";
 import { usePlayback } from "@/contexts/PlaybackContext";
 
@@ -14,7 +14,16 @@ function ParticleRain() {
   const { isPlaying } = usePlayback();
 
   // Footer height constant (120px for OceanWave + padding)
-  const FOOTER_HEIGHT = 120;
+  const FOOTER_HEIGHT = 100;
+
+  // Cache font strings
+  const fontCache = useMemo(
+    () => ({
+      chinese: '20px "Noto Serif SC", serif',
+      english: "20px Inter, sans-serif",
+    }),
+    []
+  );
 
   // Debounced resize handler
   const debouncedResize = useCallback(
@@ -147,10 +156,21 @@ function ParticleRain() {
     };
 
     const drawParticles = () => {
+      const startTime = performance.now();
       ctx.clearRect(0, 0, dimensions.width, dimensions.height);
 
       particlesRef.current.forEach((particle) => {
         if (!particle.active) return;
+
+        // Skip drawing offscreen particles
+        if (
+          particle.x < -100 ||
+          particle.x > dimensions.width + 100 ||
+          particle.y < -100 ||
+          particle.y > dimensions.height + 100
+        ) {
+          return;
+        }
 
         ctx.save();
 
@@ -160,16 +180,19 @@ function ParticleRain() {
         ctx.globalAlpha = particle.opacity * fadeOpacity * activeOpacity;
         ctx.fillStyle = particle.color;
 
-        const fontFamily = particle.isChinese
-          ? '"Noto Serif SC", serif'
-          : "Inter, sans-serif";
-        ctx.font = `${particle.fontSize}px ${fontFamily}`;
+        // Use cached font strings
+        ctx.font = particle.isChinese ? fontCache.chinese : fontCache.english;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
 
         ctx.translate(particle.x, particle.y);
-        ctx.rotate((particle.rotation * Math.PI) / 180);
 
+        // Reduce rotation complexity
+        if (particle.rotation !== 0) {
+          ctx.rotate((particle.rotation * Math.PI) / 180);
+        }
+
+        // Minimize shadow blur
         ctx.shadowColor = particle.color;
         ctx.shadowBlur = isPlaying ? 5 : 1;
 
@@ -196,7 +219,7 @@ function ParticleRain() {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [dimensions, isPlaying, initParticlePool, getParticleFromPool]);
+  }, [dimensions, isPlaying, initParticlePool, getParticleFromPool, fontCache]);
 
   return (
     <canvas

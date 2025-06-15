@@ -47,7 +47,7 @@ const CONFIG = {
       phaseOffset: Math.PI * 0.75,
     },
   ],
-  pointStep: 1.2, // Reduced for smoother curves
+  pointStep: 2, // Increased for fewer points
 };
 
 export default function OceanWave() {
@@ -56,6 +56,7 @@ export default function OceanWave() {
   const lastTimeRef = useRef(0);
   const animationFrameRef = useRef(null);
   const noiseOffsetsRef = useRef(CONFIG.waves.map(() => Math.random() * 1000));
+  const pointsCacheRef = useRef(new Map());
 
   // Memoize gradient definitions
   const gradientDefinitions = useMemo(() => {
@@ -94,74 +95,85 @@ export default function OceanWave() {
     ));
   }, []);
 
-  // Simplex noise function for natural wave movement
+  // Simplified noise function
   const noise = useCallback((x, y) => {
-    return Math.sin(x * 0.1 + y * 0.1) * Math.cos(x * 0.05 - y * 0.05);
+    return Math.sin(x * 0.1 + y * 0.1) * 0.5;
   }, []);
 
-  // Optimize wave path calculation with noise
+  // Optimized wave path calculation
   const calculateWavePath = useCallback(
     (phase, waveConfig, noiseOffset) => {
+      const cacheKey = `${phase.toFixed(2)}-${noiseOffset.toFixed(2)}`;
+      if (pointsCacheRef.current.has(cacheKey)) {
+        return pointsCacheRef.current.get(cacheKey);
+      }
+
       const points = [];
       for (let x = 0; x <= CONFIG.width; x += CONFIG.pointStep) {
-        // Add multiple sine waves with different frequencies for more natural movement
+        // Simplified wave calculation
         const baseWave = Math.sin(
           x * waveConfig.frequency + phase + waveConfig.phaseOffset
         );
-        const secondaryWave =
-          Math.sin(x * waveConfig.frequency * 1.5 + phase * 0.8) * 0.3;
-        const tertiaryWave =
-          Math.sin(x * waveConfig.frequency * 0.5 + phase * 1.2) * 0.2;
-
-        // Add noise for more organic movement
         const noiseValue =
           noise(x * 0.01 + noiseOffset, phase * 0.01) * waveConfig.noise;
-
         const y =
-          waveConfig.baseY +
-          (baseWave + secondaryWave + tertiaryWave + noiseValue) *
-            waveConfig.amplitude;
-
+          waveConfig.baseY + (baseWave + noiseValue) * waveConfig.amplitude;
         points.push(`${x},${y}`);
       }
-      return `M${points.join(" L")} L${CONFIG.width},${CONFIG.height} L0,${
+
+      const path = `M${points.join(" L")} L${CONFIG.width},${
         CONFIG.height
-      } Z`;
+      } L0,${CONFIG.height} Z`;
+
+      // Cache the result
+      pointsCacheRef.current.set(cacheKey, path);
+
+      // Limit cache size
+      if (pointsCacheRef.current.size > 100) {
+        const firstKey = pointsCacheRef.current.keys().next().value;
+        pointsCacheRef.current.delete(firstKey);
+      }
+
+      return path;
     },
     [noise]
   );
 
-  // Optimize animation frame updates
+  // Optimized animation frame updates
   const updateWaves = useCallback(
     (timestamp) => {
       if (!lastTimeRef.current) {
         lastTimeRef.current = timestamp;
+        animationFrameRef.current = requestAnimationFrame(updateWaves);
+        return;
       }
 
       const deltaTime = timestamp - lastTimeRef.current;
+
+      // Skip frame if not enough time has passed (target 30fps instead of 60fps)
+      if (deltaTime < 32) {
+        animationFrameRef.current = requestAnimationFrame(updateWaves);
+        return;
+      }
+
       lastTimeRef.current = timestamp;
 
-      // Only update if enough time has passed (target 60fps)
-      if (deltaTime > 16) {
-        CONFIG.waves.forEach((wave, index) => {
-          const speedMultiplier = isPlaying ? 1.2 : 0.5;
-          const baseSpeed = 0.001; // Base speed factor
-          const phase = timestamp * baseSpeed * wave.speed * speedMultiplier;
+      CONFIG.waves.forEach((wave, index) => {
+        const speedMultiplier = isPlaying ? 1.2 : 0.5;
+        const baseSpeed = 0.001;
+        const phase = timestamp * baseSpeed * wave.speed * speedMultiplier;
+        noiseOffsetsRef.current[index] += 0.01;
 
-          // Update noise offset for continuous movement
-          noiseOffsetsRef.current[index] += 0.01;
+        const d = calculateWavePath(
+          phase,
+          wave,
+          noiseOffsetsRef.current[index]
+        );
 
-          const d = calculateWavePath(
-            phase,
-            wave,
-            noiseOffsetsRef.current[index]
-          );
-
-          if (waveRefs.current[index]) {
-            waveRefs.current[index].setAttribute("d", d);
-          }
-        });
-      }
+        if (waveRefs.current[index]) {
+          waveRefs.current[index].setAttribute("d", d);
+        }
+      });
 
       animationFrameRef.current = requestAnimationFrame(updateWaves);
     },
@@ -171,12 +183,13 @@ export default function OceanWave() {
   // Start animation
   useAnimationFrame(updateWaves);
 
-  // Cleanup animation frame on unmount
+  // Cleanup
   useEffect(() => {
     return () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
+      pointsCacheRef.current.clear();
     };
   }, []);
 
