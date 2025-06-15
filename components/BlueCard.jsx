@@ -24,6 +24,10 @@ const BlueCard = ({
   const [isExporting, setIsExporting] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const cardRef = useRef(null);
+  const lastTapRef = useRef(0);
+  const singleTapTimeoutRef = useRef(null);
+  const touchHandledRef = useRef(false);
+  const touchStartRef = useRef({ x: null, y: null });
 
   // Touch/swipe state
   const [touchStart, setTouchStart] = useState({ x: null, y: null });
@@ -31,6 +35,7 @@ const BlueCard = ({
 
   // Minimum swipe distance (in px)
   const minSwipeDistance = 50;
+  const doubleTapDelay = 300; // ms
 
   // LocalStorage functions
   const getLikedWords = () => {
@@ -62,9 +67,54 @@ const BlueCard = ({
     }
   }, [currentData]);
 
+  // Cleanup timeout when component unmounts or modal closes
+  useEffect(() => {
+    return () => {
+      if (singleTapTimeoutRef.current) {
+        clearTimeout(singleTapTimeoutRef.current);
+        singleTapTimeoutRef.current = null;
+      }
+    };
+  }, [show]);
+
+  // Handle tap gestures with proper double-tap detection
+  const handleTap = (touchX) => {
+    const currentTime = new Date().getTime();
+    const tapLength = currentTime - lastTapRef.current;
+    const cardWidth = cardRef.current?.offsetWidth || 0;
+    const tapPosition = touchX / cardWidth;
+
+    // Clear any pending single tap timeout
+    if (singleTapTimeoutRef.current) {
+      clearTimeout(singleTapTimeoutRef.current);
+      singleTapTimeoutRef.current = null;
+    }
+
+    // Double tap detection
+    if (tapLength < doubleTapDelay && tapLength > 0) {
+      // This is a double tap - like/unlike
+      toggleLike();
+      lastTapRef.current = 0;
+      return;
+    }
+
+    // Single tap - delay execution to allow for potential double tap
+    lastTapRef.current = currentTime;
+    singleTapTimeoutRef.current = setTimeout(() => {
+      // Execute single tap navigation after delay
+      if (tapPosition < 0.3) {
+        handlePreviousWord();
+      } else if (tapPosition > 0.7) {
+        handleNextWord();
+      }
+      singleTapTimeoutRef.current = null;
+    }, doubleTapDelay);
+  };
+
   // Touch event handlers for swipe detection
   const onTouchStart = (e) => {
-    setTouchEnd({ x: null, y: null }); // otherwise the swipe is fired even with usual touch events
+    touchHandledRef.current = true;
+    setTouchEnd({ x: null, y: null });
     setTouchStart({
       x: e.targetTouches[0].clientX,
       y: e.targetTouches[0].clientY,
@@ -78,31 +128,61 @@ const BlueCard = ({
     });
   };
 
-  const onTouchEnd = () => {
-    if (!touchStart.x || !touchEnd.x || !touchStart.y || !touchEnd.y) return;
+  const onTouchEnd = (e) => {
+    // Reset touch handled flag after a delay to allow click events on desktop
+    setTimeout(() => {
+      touchHandledRef.current = false;
+    }, 100);
+
+    if (!touchStart.x || !touchEnd.x || !touchStart.y || !touchEnd.y) {
+      // Handle tap when there's no touchEnd (quick tap)
+      if (touchStart.x && touchStart.y) {
+        handleTap(touchStart.x);
+      }
+      return;
+    }
 
     const distanceX = touchStart.x - touchEnd.x;
     const distanceY = touchStart.y - touchEnd.y;
     const isLeftSwipe = distanceX > minSwipeDistance;
     const isRightSwipe = distanceX < -minSwipeDistance;
-    const isDownSwipe = distanceY < -minSwipeDistance;
+    const isUpSwipe = distanceY > minSwipeDistance;
 
-    // Prioritize vertical swipes over horizontal ones
+    // Check if it's a tap (minimal movement)
+    const isTap = Math.abs(distanceX) < 10 && Math.abs(distanceY) < 10;
+    if (isTap) {
+      handleTap(touchStart.x);
+      return;
+    }
+
+    // Handle swipes
     if (Math.abs(distanceY) > Math.abs(distanceX)) {
-      if (isDownSwipe) {
-        // Swipe down = close modal
+      if (isUpSwipe) {
         handleClose();
       }
     } else {
-      // Horizontal swipes for navigation
       if (isLeftSwipe) {
-        // Swipe left = next word
         handleNextWord();
       } else if (isRightSwipe) {
-        // Swipe right = previous word
         handlePreviousWord();
       }
     }
+  };
+
+  // Handle click events for tap detection (works on both desktop and mobile)
+  const handleClick = (e) => {
+    e.stopPropagation();
+
+    // Ignore click events if touch was recently handled (prevents double firing on mobile)
+    if (touchHandledRef.current) {
+      return;
+    }
+
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    const clickX = e.clientX - rect.left;
+    handleTap(clickX);
   };
 
   const handleClose = () => {
@@ -543,6 +623,29 @@ const BlueCard = ({
     transition: "opacity 0.3s ease",
   };
 
+  // Prevent background scroll when modal is open
+  useEffect(() => {
+    if (show) {
+      // Store original overflow value
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+
+      // Add touch event listeners to prevent scroll on the modal background
+      const preventScroll = (e) => {
+        if (e.target === e.currentTarget) {
+          e.preventDefault();
+        }
+      };
+
+      document.addEventListener("touchmove", preventScroll, { passive: false });
+
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.removeEventListener("touchmove", preventScroll);
+      };
+    }
+  }, [show]);
+
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-90 backdrop-blur flex flex-col items-center justify-center z-50"
@@ -555,7 +658,7 @@ const BlueCard = ({
             ref={cardRef}
             data-card-ref="true"
             className="relative bg-kleinBlue text-white w-full md:w-[50rem] h-[600px] md:h-[700px] mx-8 rounded-lg shadow origin-bottom-left"
-            onClick={(e) => e.stopPropagation()}
+            onClick={handleClick}
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
@@ -563,6 +666,7 @@ const BlueCard = ({
             animate={show ? "visible" : "exit"}
             variants={cardVariants}
             transition={cardTransition}
+            style={{ touchAction: "pan-y" }}
           >
             {/* Action buttons - vertical on mobile, horizontal on desktop */}
             <div className="absolute top-2 right-2 flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0">
@@ -572,7 +676,10 @@ const BlueCard = ({
                 whileTap="click"
                 variants={closeVariants}
                 className="text-white/20 px-3 py-3 md:px-4 md:py-2 rounded-md focus:outline-none disabled:opacity-50"
-                onClick={handleClose}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleClose();
+                }}
                 title="关闭 (Esc) / Close"
               >
                 <FaTimes size={20} />
@@ -585,7 +692,10 @@ const BlueCard = ({
                 whileTap={!isExporting ? "click" : {}}
                 variants={exportVariants}
                 className="text-white/20 px-3 py-3 md:px-4 md:py-2 rounded-md focus:outline-none disabled:opacity-50"
-                onClick={exportAsImage}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  exportAsImage();
+                }}
                 disabled={isExporting}
                 title={
                   isExporting
@@ -603,7 +713,10 @@ const BlueCard = ({
                 whileTap={!isSharing ? "click" : {}}
                 variants={shareVariants}
                 className="text-white/20 px-3 py-3 md:px-4 md:py-2 rounded-md focus:outline-none disabled:opacity-50"
-                onClick={shareWord}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  shareWord();
+                }}
                 disabled={isSharing}
                 title={
                   isSharing
@@ -620,7 +733,10 @@ const BlueCard = ({
                 whileTap="click"
                 variants={shuffleVariants}
                 className="text-white/20 px-3 py-3 md:px-4 md:py-2 rounded-md focus:outline-none"
-                onClick={handleShuffle}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleShuffle();
+                }}
                 title="随机单词 (Space) / Random Word"
               >
                 <FaRandom size={18} />
@@ -633,7 +749,10 @@ const BlueCard = ({
                 whileTap="click"
                 variants={heartVariants}
                 className="text-red-500 px-3 py-3 md:px-4 md:py-2 rounded-md focus:outline-none"
-                onClick={toggleLike}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleLike();
+                }}
                 title={liked ? "取消收藏 (H)" : "收藏单词 (H)"}
               >
                 <motion.div
