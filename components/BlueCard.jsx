@@ -1,12 +1,27 @@
 import { useEffect, useState, useRef } from "react";
-import { FaRegHeart, FaHeart, FaDownload } from "react-icons/fa";
+import {
+  FaRegHeart,
+  FaHeart,
+  FaDownload,
+  FaRandom,
+  FaShare,
+} from "react-icons/fa";
 import { motion } from "framer-motion";
 import { cardVariants, cardTransition } from "@/utils/motion";
 import html2canvas from "html2canvas";
+import { data } from "@/public/data/data";
+import { ModalKeyboardHints } from "./KeyboardHints";
 
-const BlueCard = ({ show, onClose, data }) => {
+const BlueCard = ({
+  show,
+  onClose,
+  data: currentData,
+  onShuffle,
+  onClearSearch,
+}) => {
   const [liked, setLiked] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
   const cardRef = useRef(null);
 
   // LocalStorage functions
@@ -34,35 +49,185 @@ const BlueCard = ({ show, onClose, data }) => {
 
   // Check if current word is liked when data changes
   useEffect(() => {
-    if (data) {
-      setLiked(isWordLiked(data));
+    if (currentData) {
+      setLiked(isWordLiked(currentData));
     }
-  }, [data]);
+  }, [currentData]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    if (!show) return;
+
+    const handleKeyDown = (e) => {
+      // Only handle modal-specific shortcuts when modal is open
+      switch (e.key) {
+        case "ArrowLeft":
+        case "ArrowUp":
+          e.preventDefault();
+          handlePreviousWord();
+          break;
+        case "ArrowRight":
+        case "ArrowDown":
+          e.preventDefault();
+          handleNextWord();
+          break;
+        case " ":
+          e.preventDefault();
+          handleShuffle();
+          break;
+        case "h":
+        case "H":
+          e.preventDefault();
+          toggleLike();
+          break;
+        case "e":
+        case "E":
+          e.preventDefault();
+          exportAsImage();
+          break;
+        case "s":
+        case "S":
+          e.preventDefault();
+          shareWord();
+          break;
+        case "Escape":
+          e.preventDefault();
+          // Close modal and clear search
+          onClose();
+          if (onClearSearch) {
+            onClearSearch();
+          }
+          break;
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [show, currentData, onClose, onClearSearch]);
+
+  const getCurrentIndex = () => {
+    if (!currentData) return 0;
+    return data.findIndex((item) => item.中文 === currentData.中文);
+  };
+
+  const handlePreviousWord = () => {
+    const currentIndex = getCurrentIndex();
+    const previousIndex = currentIndex > 0 ? currentIndex - 1 : data.length - 1;
+    const previousWord = data[previousIndex];
+    if (onShuffle) {
+      onShuffle(previousWord);
+    }
+  };
+
+  const handleNextWord = () => {
+    const currentIndex = getCurrentIndex();
+    const nextIndex = currentIndex < data.length - 1 ? currentIndex + 1 : 0;
+    const nextWord = data[nextIndex];
+    if (onShuffle) {
+      onShuffle(nextWord);
+    }
+  };
+
+  const handleShuffle = () => {
+    const randomIndex = Math.floor(Math.random() * data.length);
+    const randomWord = data[randomIndex];
+    if (onShuffle) {
+      onShuffle(randomWord);
+    }
+  };
 
   const toggleLike = () => {
-    if (!data) return;
+    if (!currentData) return;
 
     const likedWords = getLikedWords();
-    const isCurrentlyLiked = isWordLiked(data);
+    const isCurrentlyLiked = isWordLiked(currentData);
 
     if (isCurrentlyLiked) {
       // Remove from liked words
       const updatedLikedWords = likedWords.filter(
-        (word) => word.中文 !== data.中文
+        (word) => word.中文 !== currentData.中文
       );
       saveLikedWords(updatedLikedWords);
       setLiked(false);
     } else {
       // Add to liked words
-      const updatedLikedWords = [...likedWords, data];
+      const updatedLikedWords = [...likedWords, currentData];
       saveLikedWords(updatedLikedWords);
       setLiked(true);
     }
   };
 
+  // Share word function
+  const shareWord = async () => {
+    if (!currentData) return;
+
+    setIsSharing(true);
+
+    try {
+      const shareUrl = `${window.location.origin}?word=${encodeURIComponent(
+        currentData.中文
+      )}`;
+
+      // Check if Web Share API is supported
+      if (navigator.share) {
+        await navigator.share({
+          title: `蓝色词典 - ${currentData.中文}`,
+          text: `${currentData.中文} (${currentData.英文}) - ${currentData.释义}`,
+          url: shareUrl,
+        });
+      } else {
+        // Fallback: copy to clipboard
+        await navigator.clipboard.writeText(shareUrl);
+
+        // Show a temporary notification
+        const notification = document.createElement("div");
+        notification.className =
+          "fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-[200] transition-all duration-300";
+        notification.textContent =
+          "链接已复制到剪贴板 / Link copied to clipboard";
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          notification.style.opacity = "0";
+          setTimeout(() => {
+            document.body.removeChild(notification);
+          }, 300);
+        }, 2000);
+      }
+    } catch (error) {
+      console.error("Error sharing:", error);
+      // Fallback: try to copy URL to clipboard
+      try {
+        const shareUrl = `${window.location.origin}?word=${encodeURIComponent(
+          currentData.中文
+        )}`;
+        await navigator.clipboard.writeText(shareUrl);
+
+        const notification = document.createElement("div");
+        notification.className =
+          "fixed top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-[200] transition-all duration-300";
+        notification.textContent =
+          "链接已复制到剪贴板 / Link copied to clipboard";
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          notification.style.opacity = "0";
+          setTimeout(() => {
+            document.body.removeChild(notification);
+          }, 300);
+        }, 2000);
+      } catch (clipboardError) {
+        console.error("Error copying to clipboard:", clipboardError);
+        alert("分享失败，请重试 / Share failed, please try again");
+      }
+    } finally {
+      setIsSharing(false);
+    }
+  };
+
   // Export card as image
   const exportAsImage = async () => {
-    if (!cardRef.current || !data) return;
+    if (!cardRef.current || !currentData) return;
 
     setIsExporting(true);
 
@@ -107,7 +272,7 @@ const BlueCard = ({ show, onClose, data }) => {
 
       // Create download link
       const link = document.createElement("a");
-      link.download = `蓝色词典-${data.中文}.png`;
+      link.download = `蓝色词典-${currentData.中文}.png`;
       link.href = canvas.toDataURL("image/png", 1.0);
 
       // Trigger download
@@ -220,6 +385,73 @@ const BlueCard = ({ show, onClose, data }) => {
     },
   };
 
+  // Share button animation variants
+  const shareVariants = {
+    idle: {
+      scale: 1,
+      rotate: 0,
+      filter: "drop-shadow(0 0 0px rgba(59, 130, 246, 0))",
+      transition: {
+        duration: 0.3,
+        ease: "easeOut",
+      },
+    },
+    hover: {
+      scale: 1.1,
+      filter: "drop-shadow(0 0 8px rgba(59, 130, 246, 0.6))",
+      transition: {
+        duration: 0.3,
+        ease: "easeOut",
+      },
+    },
+    click: {
+      scale: [1, 1.2, 0.95, 1],
+      rotate: [0, 10, -5, 0],
+      filter: "drop-shadow(0 0 12px rgba(59, 130, 246, 0.8))",
+      transition: {
+        duration: 0.4,
+        ease: "easeOut",
+      },
+    },
+    sharing: {
+      scale: 0.9,
+      filter: "drop-shadow(0 0 10px rgba(59, 130, 246, 0.8))",
+      transition: {
+        duration: 0.3,
+      },
+    },
+  };
+
+  // Shuffle button animation variants
+  const shuffleVariants = {
+    idle: {
+      scale: 1,
+      rotate: 0,
+      filter: "drop-shadow(0 0 0px rgba(168, 85, 247, 0))",
+      transition: {
+        duration: 0.3,
+        ease: "easeOut",
+      },
+    },
+    hover: {
+      scale: 1.1,
+      filter: "drop-shadow(0 0 8px rgba(168, 85, 247, 0.6))",
+      transition: {
+        duration: 0.3,
+        ease: "easeOut",
+      },
+    },
+    click: {
+      scale: [1, 1.2, 0.95, 1],
+      rotate: [0, 180, 360],
+      filter: "drop-shadow(0 0 12px rgba(168, 85, 247, 0.8))",
+      transition: {
+        duration: 0.6,
+        ease: "easeOut",
+      },
+    },
+  };
+
   const modalStyle = {
     opacity: show ? 1 : 0,
     zIndex: show ? 100 : -1,
@@ -228,107 +460,146 @@ const BlueCard = ({ show, onClose, data }) => {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-90 backdrop-blur flex items-center justify-center z-50"
+      className="fixed inset-0 bg-black bg-opacity-90 backdrop-blur flex flex-col items-center justify-center z-50"
       onClick={onClose}
       style={modalStyle}
     >
-      {data && (
-        <motion.div
-          ref={cardRef}
-          data-card-ref="true"
-          className="relative bg-kleinBlue text-white w-full md:w-[50rem] h-[600px] md:h-[700px] mx-8 rounded-lg shadow origin-bottom-left"
-          onClick={(e) => e.stopPropagation()}
-          initial="hidden"
-          animate={show ? "visible" : "exit"}
-          variants={cardVariants}
-          transition={cardTransition}
-        >
-          <motion.button
-            initial="idle"
-            animate={liked ? "liked" : "idle"}
-            whileHover="hover"
-            whileTap="click"
-            variants={heartVariants}
-            className="absolute top-2 right-2 text-red-500 px-4 py-2 rounded-md focus:outline-none"
-            onClick={toggleLike}
+      {currentData && (
+        <>
+          <motion.div
+            ref={cardRef}
+            data-card-ref="true"
+            className="relative bg-kleinBlue text-white w-full md:w-[50rem] h-[600px] md:h-[700px] mx-8 rounded-lg shadow origin-bottom-left"
+            onClick={(e) => e.stopPropagation()}
+            initial="hidden"
+            animate={show ? "visible" : "exit"}
+            variants={cardVariants}
+            transition={cardTransition}
           >
-            <motion.div
-              animate={liked ? { scale: [1, 1.2, 1] } : { scale: 1 }}
-              transition={{ duration: 0.3 }}
+            {/* Action buttons */}
+            <motion.button
+              initial="idle"
+              animate={liked ? "liked" : "idle"}
+              whileHover="hover"
+              whileTap="click"
+              variants={heartVariants}
+              className="absolute top-2 right-2 text-red-500 px-4 py-2 rounded-md focus:outline-none"
+              onClick={toggleLike}
+              title={liked ? "取消收藏 (H)" : "收藏单词 (H)"}
             >
-              {liked ? <FaHeart size={25} /> : <FaRegHeart size={25} />}
-            </motion.div>
-          </motion.button>
-
-          <motion.button
-            initial="idle"
-            animate={isExporting ? "exporting" : "idle"}
-            whileHover={!isExporting ? "hover" : {}}
-            whileTap={!isExporting ? "click" : {}}
-            variants={exportVariants}
-            className="absolute top-2 right-16 text-white-500 px-4 py-2 rounded-md focus:outline-none disabled:opacity-50"
-            onClick={exportAsImage}
-            disabled={isExporting}
-            title={
-              isExporting
-                ? "导出中... / Exporting..."
-                : "导出图片 / Export Image"
-            }
-          >
-            <FaDownload size={22} />
-          </motion.button>
-
-          <div className="flex flex-col h-full min-h-[500px] pl-4 pr-8 py-4 md:pl-6 md:pr-12 md:py-6 text-left">
-            {/* Top section with words */}
-            <div className="space-y-6">
-              {/* Chinese word - large and prominent */}
-              <div className="text-6xl md:text-8xl font-light leading-none noto-serif-sc-regular">
-                {data.中文}
-              </div>
-
-              {/* English word */}
-              <div className="text-2xl md:text-4xl font-light tracking-wider noto-serif-sc-regular">
-                {data.英文}
-              </div>
-            </div>
-
-            {/* Middle section with definitions */}
-            <div className="flex-1 flex flex-col justify-center space-y-6">
-              <div className="text-lg md:text-2xl font-light leading-relaxed noto-serif-sc-regular">
-                释义：{data.释义}
-              </div>
-              {data.英文释义 && (
-                <div className="text-base md:text-xl leading-relaxed opacity-90 homemade-apple-regular">
-                  Paraphrase: {data.英文释义}
-                </div>
-              )}
-            </div>
-
-            {/* Bottom section with logo and source */}
-            <div className="flex justify-between items-end mt-8">
-              {/* Large first letter of English word with random rotation */}
-              <div
-                className="text-8xl md:text-9xl font-bold opacity-80 homemade-apple-regular"
-                style={{
-                  transform: `rotate(${
-                    (data.英文 && data.英文.length > 0
-                      ? data.英文.charCodeAt(0) % 21
-                      : 0) - 10
-                  }deg)`,
-                }}
+              <motion.div
+                animate={liked ? { scale: [1, 1.2, 1] } : { scale: 1 }}
+                transition={{ duration: 0.3 }}
               >
-                {data.英文 && data.英文.length > 0
-                  ? data.英文.charAt(0).toUpperCase()
-                  : "A"}
+                {liked ? <FaHeart size={25} /> : <FaRegHeart size={25} />}
+              </motion.div>
+            </motion.button>
+
+            <motion.button
+              initial="idle"
+              animate={isExporting ? "exporting" : "idle"}
+              whileHover={!isExporting ? "hover" : {}}
+              whileTap={!isExporting ? "click" : {}}
+              variants={exportVariants}
+              className="absolute top-2 right-16 text-white-500 px-4 py-2 rounded-md focus:outline-none disabled:opacity-50"
+              onClick={exportAsImage}
+              disabled={isExporting}
+              title={
+                isExporting
+                  ? "导出中... / Exporting..."
+                  : "导出图片 (E) / Export Image"
+              }
+            >
+              <FaDownload size={22} />
+            </motion.button>
+
+            <motion.button
+              initial="idle"
+              animate={isSharing ? "sharing" : "idle"}
+              whileHover={!isSharing ? "hover" : {}}
+              whileTap={!isSharing ? "click" : {}}
+              variants={shareVariants}
+              className="absolute top-2 right-28 text-blue-400 px-4 py-2 rounded-md focus:outline-none disabled:opacity-50"
+              onClick={shareWord}
+              disabled={isSharing}
+              title={
+                isSharing
+                  ? "分享中... / Sharing..."
+                  : "分享单词 (S) / Share Word"
+              }
+            >
+              <FaShare size={20} />
+            </motion.button>
+
+            <motion.button
+              initial="idle"
+              whileHover="hover"
+              whileTap="click"
+              variants={shuffleVariants}
+              className="absolute top-2 right-40 text-purple-400 px-4 py-2 rounded-md focus:outline-none"
+              onClick={handleShuffle}
+              title="随机单词 (Space) / Random Word"
+            >
+              <FaRandom size={20} />
+            </motion.button>
+
+            <div className="flex flex-col h-full min-h-[500px] pl-4 pr-8 py-4 md:pl-6 md:pr-12 md:py-6 text-left">
+              {/* Top section with words */}
+              <div className="space-y-6">
+                {/* Chinese word - large and prominent */}
+                <div className="text-6xl md:text-8xl font-light leading-none noto-serif-sc-regular">
+                  {currentData.中文}
+                </div>
+
+                {/* English word */}
+                <div className="text-2xl md:text-4xl font-light tracking-wider noto-serif-sc-regular">
+                  {currentData.英文}
+                </div>
               </div>
 
-              {/* Source attribution */}
-              <div className="text-right">
-                <div className="text-sm font-light">- {data.出处}</div>
+              {/* Middle section with definitions */}
+              <div className="flex-1 flex flex-col justify-center space-y-6">
+                <div className="text-lg md:text-2xl font-light leading-relaxed noto-serif-sc-regular">
+                  释义：{currentData.释义}
+                </div>
+                {currentData.英文释义 && (
+                  <div className="text-base md:text-xl leading-relaxed opacity-90 homemade-apple-regular">
+                    Paraphrase: {currentData.英文释义}
+                  </div>
+                )}
+              </div>
+
+              {/* Bottom section with logo and source */}
+              <div className="flex justify-between items-end mt-8">
+                {/* Large first letter of English word with random rotation */}
+                <div
+                  className="text-8xl md:text-9xl font-bold opacity-80 homemade-apple-regular"
+                  style={{
+                    transform: `rotate(${
+                      currentData.英文 && currentData.英文.length > 0
+                        ? (currentData.英文.charCodeAt(0) % 21) +
+                          Math.floor(Math.random() * 10) -
+                          15
+                        : Math.floor(Math.random() * 20) - 10
+                    }deg)`,
+                  }}
+                >
+                  {currentData.英文 && currentData.英文.length > 0
+                    ? currentData.英文.charAt(0).toUpperCase()
+                    : "A"}
+                </div>
+
+                {/* Source attribution */}
+                <div className="text-right">
+                  <div className="text-sm font-light">- {currentData.出处}</div>
+                </div>
               </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+
+          {/* Modal Keyboard Hints */}
+          <ModalKeyboardHints />
+        </>
       )}
     </div>
   );

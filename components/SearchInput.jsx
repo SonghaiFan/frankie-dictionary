@@ -1,6 +1,7 @@
 import { BsSearchHeart } from "react-icons/bs";
 import { PiEraserFill } from "react-icons/pi";
 import { useState, useRef, useEffect } from "react";
+import { SearchKeyboardHints } from "./KeyboardHints";
 
 const SearchInput = ({
   query,
@@ -10,6 +11,7 @@ const SearchInput = ({
   results,
   onRandom,
   onConfirm,
+  isModalOpen = false,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -18,6 +20,23 @@ const SearchInput = ({
 
   // Handle keyboard navigation
   const handleKeyDown = (e) => {
+    // Don't handle shortcuts when modal is open (except for global shortcuts)
+    if (isModalOpen && e.key !== "Escape" && !(e.ctrlKey || e.metaKey)) {
+      return;
+    }
+
+    // Global shortcuts that work regardless of focus
+    if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+      e.preventDefault();
+      inputRef.current?.focus();
+      return;
+    }
+
+    // If input is not focused, don't handle other shortcuts
+    if (!isFocused && e.key !== "Escape") {
+      return;
+    }
+
     if (!query || results.length === 0) {
       if (e.key === "Enter") {
         onConfirm(); // This will open random word modal when no search is active
@@ -51,6 +70,23 @@ const SearchInput = ({
         inputRef.current?.blur();
         // Generate new random placeholder when clearing
         onRandom();
+        break;
+      case "Tab":
+        // Prevent default tab behavior when results are shown
+        if (results.length > 0) {
+          e.preventDefault();
+          if (e.shiftKey) {
+            // Shift+Tab: move to previous result
+            setSelectedIndex((prev) =>
+              prev > 0 ? prev - 1 : results.length - 1
+            );
+          } else {
+            // Tab: move to next result
+            setSelectedIndex((prev) =>
+              prev < results.length - 1 ? prev + 1 : 0
+            );
+          }
+        }
         break;
     }
   };
@@ -106,17 +142,17 @@ const SearchInput = ({
     if (!query) {
       return {
         icon: <BsSearchHeart size={22} />,
-        title: "Explore random word",
+        title: "Explore random word (Enter)",
       };
     } else if (results.length > 0) {
       return {
         icon: <BsSearchHeart size={22} />,
-        title: "Search",
+        title: "Search (Enter)",
       };
     } else {
       return {
         icon: <PiEraserFill size={22} />,
-        title: "Clear search",
+        title: "Clear search (Esc)",
       };
     }
   };
@@ -218,14 +254,16 @@ const SearchInput = ({
         )}
       </div>
 
-      {/* Search hint */}
-      <div
-        className={`text-xs text-gray-400 text-center mt-3 h-4 transition-opacity duration-300 ${
-          !query && !isFocused ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        Type to search • Press Enter to explore • Use ↑↓ to navigate
-      </div>
+      {/* Search Keyboard Hints - only show when modal is not open */}
+      {!isModalOpen && (
+        <div
+          className={`transition-opacity duration-300 ${
+            !query && !isFocused ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <SearchKeyboardHints />
+        </div>
+      )}
     </div>
   );
 };
