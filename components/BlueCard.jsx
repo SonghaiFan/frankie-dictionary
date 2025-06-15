@@ -12,6 +12,8 @@ import { cardVariants, cardTransition } from "@/utils/motion";
 import html2canvas from "html2canvas";
 import { data } from "@/public/data/data";
 import { ModalKeyboardHints } from "./KeyboardHints";
+import { useToast } from "@/hooks/useToast";
+import ToastContainer from "./ToastContainer";
 
 const BlueCard = ({
   show,
@@ -24,10 +26,9 @@ const BlueCard = ({
   const [isExporting, setIsExporting] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const cardRef = useRef(null);
-  const lastTapRef = useRef(0);
-  const singleTapTimeoutRef = useRef(null);
   const touchHandledRef = useRef(false);
   const touchStartRef = useRef({ x: null, y: null });
+  const { toasts, removeToast, success, error, info } = useToast();
 
   // Touch/swipe state
   const [touchStart, setTouchStart] = useState({ x: null, y: null });
@@ -35,7 +36,6 @@ const BlueCard = ({
 
   // Minimum swipe distance (in px)
   const minSwipeDistance = 50;
-  const doubleTapDelay = 300; // ms
 
   // LocalStorage functions
   const getLikedWords = () => {
@@ -67,53 +67,31 @@ const BlueCard = ({
     }
   }, [currentData]);
 
-  // Cleanup timeout when component unmounts or modal closes
-  useEffect(() => {
-    return () => {
-      if (singleTapTimeoutRef.current) {
-        clearTimeout(singleTapTimeoutRef.current);
-        singleTapTimeoutRef.current = null;
-      }
-    };
-  }, [show]);
-
   // Handle tap gestures with proper double-tap detection
   const handleTap = (touchX) => {
-    const currentTime = new Date().getTime();
-    const tapLength = currentTime - lastTapRef.current;
     const cardWidth = cardRef.current?.offsetWidth || 0;
     const tapPosition = touchX / cardWidth;
 
-    // Clear any pending single tap timeout
-    if (singleTapTimeoutRef.current) {
-      clearTimeout(singleTapTimeoutRef.current);
-      singleTapTimeoutRef.current = null;
+    // Single tap navigation
+    if (tapPosition < 0.3) {
+      handlePreviousWord();
+    } else if (tapPosition > 0.7) {
+      handleNextWord();
     }
-
-    // Double tap detection
-    if (tapLength < doubleTapDelay && tapLength > 0) {
-      // This is a double tap - like/unlike
-      toggleLike();
-      lastTapRef.current = 0;
-      return;
-    }
-
-    // Single tap - delay execution to allow for potential double tap
-    lastTapRef.current = currentTime;
-    singleTapTimeoutRef.current = setTimeout(() => {
-      // Execute single tap navigation after delay
-      if (tapPosition < 0.3) {
-        handlePreviousWord();
-      } else if (tapPosition > 0.7) {
-        handleNextWord();
-      }
-      singleTapTimeoutRef.current = null;
-    }, doubleTapDelay);
   };
 
   // Touch event handlers for swipe detection
   const onTouchStart = (e) => {
     touchHandledRef.current = true;
+
+    // Check if the touch started on a button
+    const isButton = e.target.closest("button");
+    touchStartRef.current = {
+      x: e.targetTouches[0].clientX,
+      y: e.targetTouches[0].clientY,
+      isButton: isButton,
+    };
+
     setTouchEnd({ x: null, y: null });
     setTouchStart({
       x: e.targetTouches[0].clientX,
@@ -133,6 +111,14 @@ const BlueCard = ({
     setTimeout(() => {
       touchHandledRef.current = false;
     }, 100);
+
+    // Check if the touch started on a button or ended on a button
+    const touchEndedOnButton = e.target.closest("button");
+    const touchStartedOnButton = touchStartRef.current?.isButton;
+
+    if (touchStartedOnButton || touchEndedOnButton) {
+      return; // Don't handle navigation if touch involved a button
+    }
 
     if (!touchStart.x || !touchEnd.x || !touchStart.y || !touchEnd.y) {
       // Handle tap when there's no touchEnd (quick tap)
@@ -176,6 +162,12 @@ const BlueCard = ({
     // Ignore click events if touch was recently handled (prevents double firing on mobile)
     if (touchHandledRef.current) {
       return;
+    }
+
+    // Check if the click target is a button or inside a button
+    const isButton = e.target.closest("button");
+    if (isButton) {
+      return; // Don't handle navigation if clicking on a button
     }
 
     const rect = cardRef.current?.getBoundingClientRect();
@@ -309,24 +301,11 @@ const BlueCard = ({
           text: `${currentData.中文} (${currentData.英文}) - ${currentData.释义}`,
           url: shareUrl,
         });
+        success("分享成功 / Shared successfully");
       } else {
         // Fallback: copy to clipboard
         await navigator.clipboard.writeText(shareUrl);
-
-        // Show a temporary notification
-        const notification = document.createElement("div");
-        notification.className =
-          "fixed top-4 right-4 bg-kleinBlue text-white px-4 py-2 rounded-lg shadow-lg z-[200] transition-all duration-300";
-        notification.textContent =
-          "链接已复制到剪贴板 / Link copied to clipboard";
-        document.body.appendChild(notification);
-
-        setTimeout(() => {
-          notification.style.opacity = "0";
-          setTimeout(() => {
-            document.body.removeChild(notification);
-          }, 300);
-        }, 2000);
+        success("链接已复制到剪贴板 / Link copied to clipboard");
       }
     } catch (error) {
       console.error("Error sharing:", error);
@@ -336,23 +315,10 @@ const BlueCard = ({
           currentData.中文
         )}`;
         await navigator.clipboard.writeText(shareUrl);
-
-        const notification = document.createElement("div");
-        notification.className =
-          "fixed top-4 right-4 bg-kleinBlue text-white px-4 py-2 rounded-lg shadow-lg z-[200] transition-all duration-300";
-        notification.textContent =
-          "链接已复制到剪贴板 / Link copied to clipboard";
-        document.body.appendChild(notification);
-
-        setTimeout(() => {
-          notification.style.opacity = "0";
-          setTimeout(() => {
-            document.body.removeChild(notification);
-          }, 300);
-        }, 2000);
+        success("链接已复制到剪贴板 / Link copied to clipboard");
       } catch (clipboardError) {
         console.error("Error copying to clipboard:", clipboardError);
-        alert("分享失败，请重试 / Share failed, please try again");
+        error("分享失败，请重试 / Share failed, please try again");
       }
     } finally {
       setIsSharing(false);
@@ -414,13 +380,15 @@ const BlueCard = ({
       link.click();
       document.body.removeChild(link);
 
+      success("图片导出成功 / Image exported successfully");
+
       // Cleanup
       cardRef.current.removeChild(watermark);
       cardRef.current.style.cssText = originalStyle;
       buttons.forEach((btn) => (btn.style.display = ""));
     } catch (error) {
       console.error("Error exporting image:", error);
-      alert("导出失败，请重试 / Export failed, please try again");
+      error("导出失败，请重试 / Export failed, please try again");
     } finally {
       setIsExporting(false);
     }
@@ -748,7 +716,7 @@ const BlueCard = ({
                 whileHover="hover"
                 whileTap="click"
                 variants={heartVariants}
-                className="text-red-500 px-3 py-3 md:px-4 md:py-2 rounded-md focus:outline-none"
+                className="px-3 py-3 md:px-4 md:py-2 rounded-md focus:outline-none"
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleLike();
@@ -759,7 +727,11 @@ const BlueCard = ({
                   animate={liked ? { scale: [1, 1.2, 1] } : { scale: 1 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {liked ? <FaHeart size={22} /> : <FaRegHeart size={22} />}
+                  {liked ? (
+                    <FaHeart size={22} className="text-red-500" />
+                  ) : (
+                    <FaRegHeart size={22} className="text-white/20" />
+                  )}
                 </motion.div>
               </motion.button>
             </div>
@@ -820,6 +792,9 @@ const BlueCard = ({
           <ModalKeyboardHints />
         </>
       )}
+
+      {/* Toast Container */}
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </div>
   );
 };
