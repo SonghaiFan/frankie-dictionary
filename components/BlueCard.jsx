@@ -581,24 +581,6 @@ const BlueCard = ({
             <div className="absolute top-2 right-2 flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0">
               <motion.button
                 initial="idle"
-                animate={liked ? "liked" : "idle"}
-                whileHover="hover"
-                whileTap="click"
-                variants={heartVariants}
-                className="text-red-500 px-3 py-3 md:px-4 md:py-2 rounded-md focus:outline-none"
-                onClick={toggleLike}
-                title={liked ? "取消收藏 (H)" : "收藏单词 (H)"}
-              >
-                <motion.div
-                  animate={liked ? { scale: [1, 1.2, 1] } : { scale: 1 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {liked ? <FaHeart size={22} /> : <FaRegHeart size={22} />}
-                </motion.div>
-              </motion.button>
-
-              <motion.button
-                initial="idle"
                 animate={isExporting ? "exporting" : "idle"}
                 whileHover={!isExporting ? "hover" : {}}
                 whileTap={!isExporting ? "click" : {}}
@@ -643,6 +625,24 @@ const BlueCard = ({
                 title="随机单词 (Space) / Random Word"
               >
                 <FaRandom size={18} />
+              </motion.button>
+
+              <motion.button
+                initial="idle"
+                animate={liked ? "liked" : "idle"}
+                whileHover="hover"
+                whileTap="click"
+                variants={heartVariants}
+                className="text-red-500 px-3 py-3 md:px-4 md:py-2 rounded-md focus:outline-none"
+                onClick={toggleLike}
+                title={liked ? "取消收藏 (H)" : "收藏单词 (H)"}
+              >
+                <motion.div
+                  animate={liked ? { scale: [1, 1.2, 1] } : { scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {liked ? <FaHeart size={22} /> : <FaRegHeart size={22} />}
+                </motion.div>
               </motion.button>
             </div>
 

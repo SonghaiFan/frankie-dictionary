@@ -2,14 +2,16 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { data } from "@/public/data/data";
+import { usePlayback } from "@/contexts/PlaybackContext";
 
-function ParticleRain({ isActive = false }) {
+function ParticleRain() {
   const canvasRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const particlesRef = useRef([]);
   const animationRef = useRef(null);
   const particlePoolRef = useRef([]);
   const lastFrameTimeRef = useRef(0);
+  const { isPlaying } = usePlayback();
 
   // Debounced resize handler
   const debouncedResize = useCallback(
@@ -38,7 +40,7 @@ function ParticleRain({ isActive = false }) {
 
   // Initialize particle pool
   const initParticlePool = useCallback(() => {
-    const poolSize = Math.floor(dimensions.width / (isActive ? 15 : 25));
+    const poolSize = Math.floor(dimensions.width / (isPlaying ? 15 : 25));
     particlePoolRef.current = Array(poolSize)
       .fill(null)
       .map(() => ({
@@ -57,7 +59,7 @@ function ParticleRain({ isActive = false }) {
         maxFadeIn: 0,
         active: false,
       }));
-  }, [dimensions.width, isActive]);
+  }, [dimensions.width, isPlaying]);
 
   // Reuse particle from pool
   const getParticleFromPool = useCallback(() => {
@@ -73,22 +75,22 @@ function ParticleRain({ isActive = false }) {
     particle.text = text;
     particle.isChinese = useChineseWord;
     particle.speed =
-      Math.random() * (isActive ? 2.5 : 1) + (isActive ? 1.2 : 0.8);
+      Math.random() * (isPlaying ? 2.5 : 1) + (isPlaying ? 1.2 : 0.8);
     particle.rotation = Math.random() * 360;
-    particle.rotationSpeed = (Math.random() - 0.5) * (isActive ? 4 : 2);
+    particle.rotationSpeed = (Math.random() - 0.5) * (isPlaying ? 4 : 2);
     particle.opacity =
-      Math.random() * (isActive ? 0.6 : 0.3) + (isActive ? 0.3 : 0.1);
+      Math.random() * (isPlaying ? 0.6 : 0.3) + (isPlaying ? 0.3 : 0.1);
     particle.fontSize = Math.random() * 12 + 10;
     particle.color = `hsl(${Math.random() * 40 + 200}, ${
       Math.random() * 30 + 50
     }%, ${Math.random() * 25 + 60}%)`;
-    particle.drift = (Math.random() - 0.5) * (isActive ? 0.5 : 0.2);
+    particle.drift = (Math.random() - 0.5) * (isPlaying ? 0.5 : 0.2);
     particle.fadeIn = 0;
     particle.maxFadeIn = Math.random() * 100 + 50;
     particle.active = true;
 
     return particle;
-  }, [dimensions.width, isActive]);
+  }, [dimensions.width, isPlaying]);
 
   useEffect(() => {
     if (dimensions.width === 0 || dimensions.height === 0) return;
@@ -100,7 +102,9 @@ function ParticleRain({ isActive = false }) {
     const initParticles = () => {
       initParticlePool();
       particlesRef.current = [];
-      const particleCount = Math.floor(dimensions.width / (isActive ? 15 : 25));
+      const particleCount = Math.floor(
+        dimensions.width / (isPlaying ? 15 : 25)
+      );
 
       for (let i = 0; i < particleCount; i++) {
         const particle = getParticleFromPool();
@@ -109,7 +113,7 @@ function ParticleRain({ isActive = false }) {
     };
 
     const updateParticles = (deltaTime) => {
-      const speedMultiplier = isActive ? 1 : 0.3;
+      const speedMultiplier = isPlaying ? 1 : 0.3;
 
       particlesRef.current.forEach((particle, index) => {
         if (!particle.active) return;
@@ -147,7 +151,7 @@ function ParticleRain({ isActive = false }) {
         ctx.save();
 
         const fadeOpacity = Math.min(particle.fadeIn / particle.maxFadeIn, 1);
-        const activeOpacity = isActive ? 1 : 0.4;
+        const activeOpacity = isPlaying ? 1 : 0.4;
 
         ctx.globalAlpha = particle.opacity * fadeOpacity * activeOpacity;
         ctx.fillStyle = particle.color;
@@ -163,7 +167,7 @@ function ParticleRain({ isActive = false }) {
         ctx.rotate((particle.rotation * Math.PI) / 180);
 
         ctx.shadowColor = particle.color;
-        ctx.shadowBlur = isActive ? 5 : 1;
+        ctx.shadowBlur = isPlaying ? 5 : 1;
 
         ctx.fillText(particle.text, 0, 0);
 
@@ -188,7 +192,7 @@ function ParticleRain({ isActive = false }) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [dimensions, isActive, initParticlePool, getParticleFromPool]);
+  }, [dimensions, isPlaying, initParticlePool, getParticleFromPool]);
 
   return (
     <canvas

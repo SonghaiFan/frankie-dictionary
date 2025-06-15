@@ -1,5 +1,6 @@
 import { motion, useAnimationFrame } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useMemo, useCallback, useEffect } from "react";
+import { usePlayback } from "@/contexts/PlaybackContext";
 
 const CONFIG = {
   width: 600,
@@ -19,7 +20,7 @@ const CONFIG = {
       baseY: 110,
       speed: 0.004,
       opacity: 0.7,
-      color: "#1e1b9e", // slightly lighter kleinBlue
+      color: "#130f94", // kleinBlue
     },
     {
       amplitude: 15,
@@ -27,44 +28,111 @@ const CONFIG = {
       baseY: 100,
       speed: 0.005,
       opacity: 0.5,
-      color: "#2d2aaa", // even lighter kleinBlue
+      color: "#130f94", // kleinBlue
     },
   ],
   pointStep: 1.5,
 };
 
-function getWavePath(phase, waveConfig) {
-  const { width, height, amplitude, frequency, baseY, pointStep } = CONFIG;
-  const points = [];
-
-  for (let x = 0; x <= width; x += pointStep) {
-    const y =
-      waveConfig.baseY +
-      Math.sin(x * waveConfig.frequency + phase) * waveConfig.amplitude;
-    points.push(`${x},${y}`);
-  }
-
-  return `M${points.join(" L")} L${width},${height} L0,${height} Z`;
-}
-
 export default function OceanWave() {
   const waveRefs = useRef(CONFIG.waves.map(() => null));
+  const { isPlaying } = usePlayback();
+  const lastTimeRef = useRef(0);
+  const animationFrameRef = useRef(null);
 
-  useAnimationFrame((t) => {
-    CONFIG.waves.forEach((wave, index) => {
-      const phase = t * wave.speed;
-      const d = getWavePath(phase, wave);
-      if (waveRefs.current[index]) {
-        waveRefs.current[index].setAttribute("d", d);
+  // Memoize gradient definitions
+  const gradientDefinitions = useMemo(() => {
+    return CONFIG.waves.map((wave, index) => (
+      <linearGradient
+        key={`gradient-${index}`}
+        id={`waveGradient-${index}`}
+        x1="0%"
+        y1="0%"
+        x2="0%"
+        y2="100%"
+      >
+        <stop offset="0%" stopColor="#130f94" stopOpacity="0" />
+        <stop
+          offset="20%"
+          stopColor="#130f94"
+          stopOpacity={wave.opacity * 0.2}
+        />
+        <stop
+          offset="40%"
+          stopColor="#130f94"
+          stopOpacity={wave.opacity * 0.4}
+        />
+        <stop
+          offset="60%"
+          stopColor="#130f94"
+          stopOpacity={wave.opacity * 0.6}
+        />
+        <stop
+          offset="80%"
+          stopColor="#130f94"
+          stopOpacity={wave.opacity * 0.8}
+        />
+        <stop offset="100%" stopColor="#130f94" stopOpacity="1" />
+      </linearGradient>
+    ));
+  }, []);
+
+  // Optimize wave path calculation
+  const calculateWavePath = useCallback((phase, waveConfig) => {
+    const points = [];
+    for (let x = 0; x <= CONFIG.width; x += CONFIG.pointStep) {
+      const y =
+        waveConfig.baseY +
+        Math.sin(x * waveConfig.frequency + phase) * waveConfig.amplitude;
+      points.push(`${x},${y}`);
+    }
+    return `M${points.join(" L")} L${CONFIG.width},${CONFIG.height} L0,${
+      CONFIG.height
+    } Z`;
+  }, []);
+
+  // Optimize animation frame updates
+  const updateWaves = useCallback(
+    (timestamp) => {
+      if (!lastTimeRef.current) {
+        lastTimeRef.current = timestamp;
       }
-    });
-  });
+
+      const deltaTime = timestamp - lastTimeRef.current;
+      lastTimeRef.current = timestamp;
+
+      // Only update if enough time has passed (target 60fps)
+      if (deltaTime > 16) {
+        CONFIG.waves.forEach((wave, index) => {
+          const speedMultiplier = isPlaying ? 1.5 : 1;
+          const phase = timestamp * wave.speed * speedMultiplier;
+          const d = calculateWavePath(phase, wave);
+
+          if (waveRefs.current[index]) {
+            waveRefs.current[index].setAttribute("d", d);
+          }
+        });
+      }
+
+      animationFrameRef.current = requestAnimationFrame(updateWaves);
+    },
+    [isPlaying, calculateWavePath]
+  );
+
+  // Start animation
+  useAnimationFrame(updateWaves);
+
+  // Cleanup animation frame on unmount
+  useEffect(() => {
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, []);
 
   return (
-    <div className="w-full h-[120px] overflow-hidden relative">
-      {/* Background that ensures seamless footer connection */}
-      <div className="absolute bottom-0 w-full h-8 bg-kleinBlue" />
-
+    <div className="w-full h-[120px] overflow-hidden relative -mb-1">
       {/* SVG Waves */}
       <svg
         viewBox={`0 0 ${CONFIG.width} ${CONFIG.height}`}
@@ -72,31 +140,7 @@ export default function OceanWave() {
         className="absolute inset-0 w-full h-full"
       >
         <defs>
-          {/* Gradient definitions for each wave */}
-          {CONFIG.waves.map((wave, index) => (
-            <linearGradient
-              key={`gradient-${index}`}
-              id={`waveGradient-${index}`}
-              x1="0%"
-              y1="0%"
-              x2="0%"
-              y2="100%"
-            >
-              <stop offset="0%" stopColor={wave.color} stopOpacity="0" />
-              <stop
-                offset="30%"
-                stopColor={wave.color}
-                stopOpacity={wave.opacity * 0.3}
-              />
-              <stop
-                offset="60%"
-                stopColor={wave.color}
-                stopOpacity={wave.opacity * 0.7}
-              />
-              <stop offset="85%" stopColor="#130f94" stopOpacity="0.95" />
-              <stop offset="100%" stopColor="#130f94" stopOpacity="1" />
-            </linearGradient>
-          ))}
+          {gradientDefinitions}
 
           {/* Drop shadow filter */}
           <filter id="waveShadow" x="-50%" y="-50%" width="200%" height="200%">

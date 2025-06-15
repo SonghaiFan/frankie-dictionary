@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
+import { usePlayback } from "@/contexts/PlaybackContext";
 
 const VinylCover = ({ children }) => {
   return (
@@ -13,10 +14,9 @@ const VinylCover = ({ children }) => {
   );
 };
 
-const Vinyl = ({ onPlayingChange }) => {
+const Vinyl = () => {
   const [randomIndex, setRandomIndex] = useState(null);
-  const [playing, setPlaying] = useState(false);
-
+  const { isPlaying, togglePlayback } = usePlayback();
   const audioRef = useRef(null);
 
   // This useEffect will run once, when the component is mounted on the client side
@@ -40,21 +40,12 @@ const Vinyl = ({ onPlayingChange }) => {
 
   useEffect(() => {
     // Handle playing state change
-    if (playing && audioRef.current) {
+    if (isPlaying && audioRef.current) {
       audioRef.current.play();
     } else if (audioRef.current) {
       audioRef.current.pause();
     }
-
-    // Notify parent component of playing state change
-    if (onPlayingChange) {
-      onPlayingChange(playing);
-    }
-  }, [playing, onPlayingChange]);
-
-  const toggleMusic = () => {
-    setPlaying(!playing);
-  };
+  }, [isPlaying]);
 
   const imageVariants = {
     playing: {
@@ -96,11 +87,11 @@ const Vinyl = ({ onPlayingChange }) => {
     <VinylCover>
       <motion.img
         initial="paused"
-        animate={playing ? "playing" : "paused"}
+        animate={isPlaying ? "playing" : "paused"}
         whileHover="hover"
         variants={{ ...imageVariants, ...hoverVariants }}
         src={`/images/Blue_Photo${randomIndex}.jpg`}
-        onClick={toggleMusic}
+        onClick={togglePlayback}
         alt="Blue_Photo"
         width={10}
         height={10}

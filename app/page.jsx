@@ -8,12 +8,12 @@ import SearchInput from "@/components/SearchInput";
 import Title from "@/components/Title";
 import Vinyl from "@/components/Vinyl";
 import ParticleRain from "@/components/ParticleRain";
+import { PlaybackProvider } from "@/contexts/PlaybackContext";
 
 export default function Home() {
   const [query, setQuery] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
   const [showExplanation, setShowExplanation] = useState(false);
-  const [isVinylPlaying, setIsVinylPlaying] = useState(false);
   const [isRandomWord, setIsRandomWord] = useState(false);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
 
@@ -181,44 +181,42 @@ export default function Home() {
     setIsRandomWord(false);
   };
 
-  const handleVinylPlayingChange = (playing) => {
-    setIsVinylPlaying(playing);
-  };
-
   const filteredData = selectedItem || (query ? results[0] : []);
 
   return (
-    <div className="flex flex-col items-center w-full mx-auto min-h-screen overflow-auto relative">
-      {/* Main Content */}
-      <div className="flex-grow" />
-      <div className="h-[10%] relative z-10">
-        <Vinyl onPlayingChange={handleVinylPlayingChange} />
-        <Title />
-      </div>
-      <div className="h-[40%] mb-[10%] relative z-10">
-        <SearchInput
-          query={query}
-          setQuery={setQuery}
-          defaultText={placeholder?.中文}
-          onSelect={handleSelect}
-          results={results}
-          onRandom={handleRandom}
-          onConfirm={handleOpenModal}
-          isModalOpen={showExplanation}
+    <PlaybackProvider>
+      <div className="flex flex-col items-center w-full mx-auto min-h-screen overflow-auto relative">
+        {/* Main Content */}
+        <div className="flex-grow" />
+        <div className="h-[10%] relative z-10">
+          <Vinyl />
+          <Title />
+        </div>
+        <div className="h-[40%] mb-[10%] relative z-10">
+          <SearchInput
+            query={query}
+            setQuery={setQuery}
+            defaultText={placeholder?.中文}
+            onSelect={handleSelect}
+            results={results}
+            onRandom={handleRandom}
+            onConfirm={handleOpenModal}
+            isModalOpen={showExplanation}
+          />
+        </div>
+        <BlueCard
+          show={showExplanation}
+          onClose={handleCloseModal}
+          data={filteredData}
+          onShuffle={handleShuffle}
+          onClearSearch={handleClearSearch}
         />
-      </div>
-      <BlueCard
-        show={showExplanation}
-        onClose={handleCloseModal}
-        data={filteredData}
-        onShuffle={handleShuffle}
-        onClearSearch={handleClearSearch}
-      />
-      <div className="flex-grow" />
-      <Footer />
+        <div className="flex-grow" />
+        <Footer />
 
-      {/* Particle Rain Background */}
-      <ParticleRain isActive={isVinylPlaying} />
-    </div>
+        {/* Particle Rain Background */}
+        <ParticleRain />
+      </div>
+    </PlaybackProvider>
   );
 }
