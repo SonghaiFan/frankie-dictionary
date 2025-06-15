@@ -182,7 +182,7 @@ const BlueCard = ({
         // Show a temporary notification
         const notification = document.createElement("div");
         notification.className =
-          "fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-[200] transition-all duration-300";
+          "fixed top-4 right-4 bg-kleinBlue text-white px-4 py-2 rounded-lg shadow-lg z-[200] transition-all duration-300";
         notification.textContent =
           "链接已复制到剪贴板 / Link copied to clipboard";
         document.body.appendChild(notification);
@@ -205,7 +205,7 @@ const BlueCard = ({
 
         const notification = document.createElement("div");
         notification.className =
-          "fixed top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-[200] transition-all duration-300";
+          "fixed top-4 right-4 bg-kleinBlue text-white px-4 py-2 rounded-lg shadow-lg z-[200] transition-all duration-300";
         notification.textContent =
           "链接已复制到剪贴板 / Link copied to clipboard";
         document.body.appendChild(notification);
