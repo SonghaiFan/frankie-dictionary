@@ -1,27 +1,24 @@
+@import url("https://fonts.googleapis.com/css2?family=Homemade+Apple&family=Noto+Serif+SC:wght@200..900&family=ZCOOL+XiaoWei&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: "Noto Serif SC";
-  src: url("/font/Noto_Serif_SC/NotoSerifSC-Regular.otf") format("opentype");
-  font-weight: light;
+.homemade-apple-regular {
+  font-family: "Homemade Apple", cursive;
+  font-weight: 400;
   font-style: normal;
-  font-display: swap;
 }
 
-@font-face {
-  font-family: "Noto Serif SC";
-  src: url("/font/Noto_Serif_SC/NotoSerifSC-Regular.otf") format("opentype");
-  font-weight: normal;
+.zcool-xiaowei-regular {
+  font-family: "ZCOOL XiaoWei", sans-serif;
+  font-weight: 400;
   font-style: normal;
-  font-display: swap;
 }
 
-@font-face {
-  font-family: "Noto Serif SC";
-  src: url("/font/Noto_Serif_SC/NotoSerifSC-Bold.otf") format("opentype");
-  font-weight: bold;
+.noto-serif-sc-regular {
+  font-family: "Noto Serif SC", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
   font-style: normal;
-  font-display: swap;
 }
