@@ -108,18 +108,21 @@ export const data = [
     中文: "牛奶",
     英文: "Milk",
     释义: "忧郁时的饮品",
+    英文释义: "A drink for depression",
     出处: "上山养大猫",
   },
   {
     中文: "碳酸饮料",
     英文: "Soda",
     释义: "喝可乐会醉",
+    英文释义: "Drinking Coke will make you drunk",
     出处: "上山养大猫",
   },
   {
     中文: "茶",
     英文: "Tea",
     释义: "奶茶也是茶",
+    英文释义: "Tea is also tea",
     出处: "上山养大猫",
   },
   {
@@ -560,19 +563,6 @@ export const data = [
     出处: "木心",
   },
   {
-    中文: "五月天",
-    英文: "MayBeDay",
-    释义: "行走的CD",
-    出处: "纸秋",
-  },
-  {
-    中文: "音乐",
-    英文: "Music",
-    释义: "避难所的酒水",
-    英文释义: "Liquor of the sanctuary",
-    出处: "范松海",
-  },
-  {
     中文: "沉默",
     英文: "Silence",
     释义: "神明的使命之一",
@@ -778,13 +768,6 @@ export const data = [
     出处: "上山养大猫",
   },
   {
-    中文: "狗",
-    英文: "Dog",
-    释义: "一种不会说话的人",
-    英文释义: "A person who doesn't speak",
-    出处: "范松海",
-  },
-  {
     中文: "早饭",
     英文: "Breakfast",
     释义: "传说",
@@ -804,13 +787,6 @@ export const data = [
     释义: "用来证明过去的存在的证据",
     英文释义: "Evidence used to prove the existence of the past",
     出处: "蓝色词典ai",
-  },
-  {
-    中文: "医生",
-    英文: "Doctor",
-    释义: "病得不够严重的病人",
-    英文释义: "A patient who is not sick enough",
-    出处: "范松海",
   },
   {
     中文: "战争",
@@ -850,13 +826,6 @@ export const data = [
   {
     中文: "见面",
     英文: "Meet",
-    释义: "究竟是见一面少一面，还是见一面多一面",
-    英文释义: "Whether it's one less or one more",
-    出处: "73",
-  },
-  {
-    中文: "见面",
-    英文: "Meet",
     释义: "使用面容解锁",
     英文释义: "Use face recognition to unlock",
     出处: "上山养大猫",
@@ -866,13 +835,6 @@ export const data = [
     英文: "Expect",
     释义: "一种精神上的自残行为",
     英文释义: "A self-harm behavior on the spiritual level",
-    出处: "73",
-  },
-  {
-    中文: "休息",
-    英文: "Rest",
-    释义: "把脑袋拆下来过一会儿再装回去",
-    英文释义: "Take the head off and put it back later",
     出处: "73",
   },
   {
@@ -1047,7 +1009,7 @@ export const data = [
   {
     中文: "WiFi",
     英文: "WiFi",
-    释义: "脐带",
+    释义: "电子脐带",
     英文释义: "Umbilical cord",
     出处: "蓝色词典ai",
   },

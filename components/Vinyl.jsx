@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 
@@ -23,7 +22,7 @@ const Vinyl = ({ onPlayingChange }) => {
   // This useEffect will run once, when the component is mounted on the client side
   useEffect(() => {
     // Generate a random index for the image
-    setRandomIndex(Math.floor(Math.random() * 6) + 1);
+    setRandomIndex(Math.floor(Math.random() * 9) + 1);
   }, []);
 
   useEffect(() => {
