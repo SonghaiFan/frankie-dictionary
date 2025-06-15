@@ -12,6 +12,9 @@ function ParticleRain() {
   const particlePoolRef = useRef([]);
   const lastFrameTimeRef = useRef(0);
   const { isPlaying } = usePlayback();
+  const footerRef = useRef(null);
+  const [footerHeight, setFooterHeight] = useState(0);
+  const [isFooterVisible, setIsFooterVisible] = useState(true);
 
   // Footer height constant
   const FOOTER_HEIGHT = 50;
@@ -49,6 +52,40 @@ function ParticleRain() {
       debouncedResize.cancel();
     };
   }, [debouncedResize]);
+
+  // Observe footer height and visibility
+  useEffect(() => {
+    const footer = document.querySelector("footer");
+    if (!footer) return;
+
+    footerRef.current = footer;
+
+    // Create ResizeObserver to track footer height changes
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const height = entry.contentRect.height;
+        setFooterHeight(height);
+      }
+    });
+
+    // Create IntersectionObserver to track footer visibility
+    const intersectionObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          setIsFooterVisible(entry.isIntersecting);
+        }
+      },
+      { threshold: 0 }
+    );
+
+    resizeObserver.observe(footer);
+    intersectionObserver.observe(footer);
+
+    return () => {
+      resizeObserver.disconnect();
+      intersectionObserver.disconnect();
+    };
+  }, []);
 
   // Initialize particle pool
   const initParticlePool = useCallback(() => {
@@ -125,7 +162,7 @@ function ParticleRain() {
     };
 
     const updateParticles = (deltaTime) => {
-      const speedMultiplier = isPlaying ? 0.5 : 0.1;
+      const speedMultiplier = isPlaying ? 1 : 0.3;
 
       particlesRef.current.forEach((particle, index) => {
         if (!particle.active) return;
@@ -138,8 +175,8 @@ function ParticleRain() {
           particle.fadeIn += 2;
         }
 
-        // Remove particle when it reaches the footer area
-        if (particle.y > dimensions.height - FOOTER_HEIGHT) {
+        // Only remove particles when footer is visible and particle reaches it
+        if (isFooterVisible && particle.y > dimensions.height - footerHeight) {
           particle.active = false;
           const newParticle = getParticleFromPool();
           if (newParticle) {
@@ -219,7 +256,15 @@ function ParticleRain() {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [dimensions, isPlaying, initParticlePool, getParticleFromPool, fontCache]);
+  }, [
+    dimensions,
+    isPlaying,
+    initParticlePool,
+    getParticleFromPool,
+    fontCache,
+    footerHeight,
+    isFooterVisible,
+  ]);
 
   return (
     <canvas
