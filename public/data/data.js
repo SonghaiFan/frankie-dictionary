@@ -56,13 +56,6 @@ export const data = [
   出处: "上山养大猫",
 },
 {
-  中文: "委婉",
-  英文: "Euphemistic",
-  释义: "刺向他人时，决定在剑刃上撒上止痛药",
-  英文释义: "A sword sprinkled with painkillers",
-  出处: "上山养大猫",
-},
-{
   中文: "念旧",
   英文: "Nostalgia",
   释义: "一种轻微的自虐倾向",
