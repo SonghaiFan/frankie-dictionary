@@ -5,13 +5,7 @@ export const data = [
     释义: "文字游戏",
     英文释义: "A game of words",
     出处: "范松海",
-  },{
-  中文: "回忆",
-  英文: "Recall",
-  释义: "只有一个观众的电影",
-  英文释义: "A movie with only one audience",
-  出处: "上山养大猫",
-},
+  },
 {
   中文: "梦",
   英文: "Dream",
