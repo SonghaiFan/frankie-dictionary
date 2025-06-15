@@ -5,15 +5,13 @@
 @tailwind utilities;
 
 .homemade-apple-regular {
-  font-family: "Homemade Apple", cursive,
-    "@/font/Homemade_Apple/HomemadeApple-Regular.ttf";
+  font-family: "Homemade Apple", cursive;
   font-weight: 400;
   font-style: normal;
 }
 
 .noto-serif-sc-regular {
-  font-family: "Noto Serif SC", serif,
-    "@/font/Noto_Serif_SC/NotoSerifSC-Regular.otf";
+  font-family: "Noto Serif SC", serif;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
