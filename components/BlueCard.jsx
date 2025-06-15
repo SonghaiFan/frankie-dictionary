@@ -24,6 +24,13 @@ const BlueCard = ({
   const [isSharing, setIsSharing] = useState(false);
   const cardRef = useRef(null);
 
+  // Touch/swipe state
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+
+  // Minimum swipe distance (in px)
+  const minSwipeDistance = 50;
+
   // LocalStorage functions
   const getLikedWords = () => {
     if (typeof window !== "undefined") {
@@ -53,6 +60,32 @@ const BlueCard = ({
       setLiked(isWordLiked(currentData));
     }
   }, [currentData]);
+
+  // Touch event handlers for swipe detection
+  const onTouchStart = (e) => {
+    setTouchEnd(null); // otherwise the swipe is fired even with usual touch events
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      // Swipe left = next word
+      handleNextWord();
+    } else if (isRightSwipe) {
+      // Swipe right = previous word
+      handlePreviousWord();
+    }
+  };
 
   // Keyboard navigation
   useEffect(() => {
@@ -471,77 +504,82 @@ const BlueCard = ({
             data-card-ref="true"
             className="relative bg-kleinBlue text-white w-full md:w-[50rem] h-[600px] md:h-[700px] mx-8 rounded-lg shadow origin-bottom-left"
             onClick={(e) => e.stopPropagation()}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
             initial="hidden"
             animate={show ? "visible" : "exit"}
             variants={cardVariants}
             transition={cardTransition}
           >
-            {/* Action buttons */}
-            <motion.button
-              initial="idle"
-              animate={liked ? "liked" : "idle"}
-              whileHover="hover"
-              whileTap="click"
-              variants={heartVariants}
-              className="absolute top-2 right-2 text-red-500 px-4 py-2 rounded-md focus:outline-none"
-              onClick={toggleLike}
-              title={liked ? "取消收藏 (H)" : "收藏单词 (H)"}
-            >
-              <motion.div
-                animate={liked ? { scale: [1, 1.2, 1] } : { scale: 1 }}
-                transition={{ duration: 0.3 }}
+            {/* Action buttons - vertical on mobile, horizontal on desktop */}
+            <div className="absolute top-2 right-2 flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0">
+              <motion.button
+                initial="idle"
+                animate={liked ? "liked" : "idle"}
+                whileHover="hover"
+                whileTap="click"
+                variants={heartVariants}
+                className="text-red-500 px-3 py-3 md:px-4 md:py-2 rounded-md focus:outline-none"
+                onClick={toggleLike}
+                title={liked ? "取消收藏 (H)" : "收藏单词 (H)"}
               >
-                {liked ? <FaHeart size={25} /> : <FaRegHeart size={25} />}
-              </motion.div>
-            </motion.button>
+                <motion.div
+                  animate={liked ? { scale: [1, 1.2, 1] } : { scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {liked ? <FaHeart size={22} /> : <FaRegHeart size={22} />}
+                </motion.div>
+              </motion.button>
 
-            <motion.button
-              initial="idle"
-              animate={isExporting ? "exporting" : "idle"}
-              whileHover={!isExporting ? "hover" : {}}
-              whileTap={!isExporting ? "click" : {}}
-              variants={exportVariants}
-              className="absolute top-2 right-16 text-white-500 px-4 py-2 rounded-md focus:outline-none disabled:opacity-50"
-              onClick={exportAsImage}
-              disabled={isExporting}
-              title={
-                isExporting
-                  ? "导出中... / Exporting..."
-                  : "导出图片 (E) / Export Image"
-              }
-            >
-              <FaDownload size={22} />
-            </motion.button>
+              <motion.button
+                initial="idle"
+                animate={isExporting ? "exporting" : "idle"}
+                whileHover={!isExporting ? "hover" : {}}
+                whileTap={!isExporting ? "click" : {}}
+                variants={exportVariants}
+                className="text-white/20 px-3 py-3 md:px-4 md:py-2 rounded-md focus:outline-none disabled:opacity-50"
+                onClick={exportAsImage}
+                disabled={isExporting}
+                title={
+                  isExporting
+                    ? "导出中... / Exporting..."
+                    : "导出图片 (E) / Export Image"
+                }
+              >
+                <FaDownload size={20} />
+              </motion.button>
 
-            <motion.button
-              initial="idle"
-              animate={isSharing ? "sharing" : "idle"}
-              whileHover={!isSharing ? "hover" : {}}
-              whileTap={!isSharing ? "click" : {}}
-              variants={shareVariants}
-              className="absolute top-2 right-28 text-blue-400 px-4 py-2 rounded-md focus:outline-none disabled:opacity-50"
-              onClick={shareWord}
-              disabled={isSharing}
-              title={
-                isSharing
-                  ? "分享中... / Sharing..."
-                  : "分享单词 (S) / Share Word"
-              }
-            >
-              <FaShare size={20} />
-            </motion.button>
+              <motion.button
+                initial="idle"
+                animate={isSharing ? "sharing" : "idle"}
+                whileHover={!isSharing ? "hover" : {}}
+                whileTap={!isSharing ? "click" : {}}
+                variants={shareVariants}
+                className="text-white/20 px-3 py-3 md:px-4 md:py-2 rounded-md focus:outline-none disabled:opacity-50"
+                onClick={shareWord}
+                disabled={isSharing}
+                title={
+                  isSharing
+                    ? "分享中... / Sharing..."
+                    : "分享单词 (S) / Share Word"
+                }
+              >
+                <FaShare size={18} />
+              </motion.button>
 
-            <motion.button
-              initial="idle"
-              whileHover="hover"
-              whileTap="click"
-              variants={shuffleVariants}
-              className="absolute top-2 right-40 text-purple-400 px-4 py-2 rounded-md focus:outline-none"
-              onClick={handleShuffle}
-              title="随机单词 (Space) / Random Word"
-            >
-              <FaRandom size={20} />
-            </motion.button>
+              <motion.button
+                initial="idle"
+                whileHover="hover"
+                whileTap="click"
+                variants={shuffleVariants}
+                className="text-white/20 px-3 py-3 md:px-4 md:py-2 rounded-md focus:outline-none"
+                onClick={handleShuffle}
+                title="随机单词 (Space) / Random Word"
+              >
+                <FaRandom size={18} />
+              </motion.button>
+            </div>
 
             <div className="flex flex-col h-full min-h-[500px] pl-4 pr-8 py-4 md:pl-6 md:pr-12 md:py-6 text-left">
               {/* Top section with words */}
@@ -577,10 +615,8 @@ const BlueCard = ({
                   style={{
                     transform: `rotate(${
                       currentData.英文 && currentData.英文.length > 0
-                        ? (currentData.英文.charCodeAt(0) % 21) +
-                          Math.floor(Math.random() * 10) -
-                          15
-                        : Math.floor(Math.random() * 20) - 10
+                        ? (currentData.英文.charCodeAt(0) % 21) - 10
+                        : 0
                     }deg)`,
                   }}
                 >

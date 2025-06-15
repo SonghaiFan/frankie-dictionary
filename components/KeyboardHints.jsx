@@ -7,7 +7,7 @@ function ModalKeyboardHints() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: 0.2 }}
-      className="mt-4 text-center text-white/60 text-sm space-y-2"
+      className="mt-4 text-center text-white/60 text-sm space-y-2 hidden md:block"
     >
       {/* Word Navigation Shortcuts */}
       <div className="flex items-center justify-center space-x-4">
@@ -48,7 +48,7 @@ function ModalKeyboardHints() {
 // Search version - shows search-specific shortcuts
 function SearchKeyboardHints() {
   return (
-    <div className="text-xs text-gray-400 text-center mt-3 space-y-1">
+    <div className="text-xs text-gray-400 text-center mt-3 space-y-1 hidden md:block">
       <div className="flex items-center justify-center space-x-3">
         <div className="flex items-center space-x-1">
           <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-xs">⌘K</kbd>
