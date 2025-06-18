@@ -189,7 +189,7 @@ export default function Home() {
         {/* Main Content Stack with top margin */}
         <div
           className="flex flex-col items-center w-full"
-          style={{ marginTop: "20vh" }}
+          style={{ marginTop: "18vh" }}
         >
           <Vinyl />
           <Title />

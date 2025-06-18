@@ -4,7 +4,7 @@ import { usePlayback } from "@/contexts/PlaybackContext";
 
 const VinylCover = ({ children }) => {
   return (
-    <div className="flex justify-center bg-kleinBlue rounded mb-2 w-fit h-fit m-auto shadow-xl">
+    <div className="flex justify-center bg-kleinBlue rounded mb-2 w-fit h-fit m-auto shadow-xl z-10">
       <div
         className={`relative md:w-[250px] md:h-[250px] w-[150px] h-[150px] rounded-full overflow-hidden `}
       >
