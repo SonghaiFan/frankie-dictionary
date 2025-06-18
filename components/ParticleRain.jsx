@@ -86,32 +86,23 @@ function ParticleRain() {
     const particle = particlePoolRef.current.find((p) => !p.active);
     if (!particle) return null;
 
-    // Snow-like particle config
     particle.x = Math.random() * dimensions.width;
-    particle.y = -20 - Math.random() * 40;
+    particle.y = -100 - Math.random() * 500;
     particle.text = text;
     particle.isChinese = useChineseWord;
-    // Snow falls gently, slower, with some random speed
     particle.speed =
-      Math.random() * (isPlaying ? 0.7 : 0.4) + (isPlaying ? 0.7 : 0.3);
-    // Minimal rotation for snowflakes
+      Math.random() * (isPlaying ? 1 : 1) + (isPlaying ? 2 : 0.8);
     particle.rotation = Math.random() * 360;
-    particle.rotationSpeed = (Math.random() - 0.5) * (isPlaying ? 0.2 : 0.1);
-    // Soft, semi-transparent snow
+    particle.rotationSpeed = (Math.random() - 0.5) * (isPlaying ? 2 : 1);
     particle.opacity =
-      Math.random() * (isPlaying ? 0.4 : 0.2) + (isPlaying ? 0.3 : 0.15);
-    // Larger font for snowflakes, but with some variation
-    particle.fontSize = Math.random() * 10 + 18;
-    // White to very light blue for snow
-    const snowHue = 210 + Math.random() * 10; // 210-220
-    const snowSat = 30 + Math.random() * 20; // 30-50%
-    const snowLight = 90 + Math.random() * 8; // 90-98%
-    particle.color = `hsl(${snowHue}, ${snowSat}%, ${snowLight}%)`;
-    // Gentle horizontal drift, more pronounced if playing
-    particle.drift = (Math.random() - 0.5) * (isPlaying ? 1.2 : 0.6);
-    // Fade in quickly for snow
+      Math.random() * (isPlaying ? 0.6 : 0.3) + (isPlaying ? 0.3 : 0.1);
+    particle.fontSize = Math.random() * 12 + 10;
+    particle.color = `hsl(${Math.random() * 40 + 200}, ${
+      Math.random() * 30 + 50
+    }%, ${Math.random() * 25 + 60}%)`;
+    particle.drift = (Math.random() - 0.5) * (isPlaying ? 0.5 : 0.2);
     particle.fadeIn = 0;
-    particle.maxFadeIn = Math.random() * 30 + 20;
+    particle.maxFadeIn = Math.random() * 100 + 50;
     particle.active = true;
 
     return particle;
