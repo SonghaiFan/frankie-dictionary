@@ -2,7 +2,7 @@ import OceanWave from "./OceanWave";
 
 const Footer = () => {
   return (
-    <div className="relative w-full">
+    <div className="relative w-full z-10">
       <OceanWave />
       <footer className="w-full bg-kleinBlue text-white text-sm text-center p-2 md:p-4">
         <div className="max-w-7xl mx-auto">

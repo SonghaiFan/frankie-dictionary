@@ -784,7 +784,10 @@ const BlueCard = ({
                 </div>
 
                 {/* Source attribution */}
-                <div className="text-right">
+                <div
+                  className="text-right absolute"
+                  style={{ bottom: 12, right: 16 }}
+                >
                   <div className="text-sm font-light">- {currentData.出处}</div>
                 </div>
               </div>
