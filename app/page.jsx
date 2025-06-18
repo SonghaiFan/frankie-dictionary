@@ -187,7 +187,10 @@ export default function Home() {
     <PlaybackProvider>
       <div className="flex flex-col h-screen items-center justify-center relative">
         {/* Main Content Stack with top margin */}
-        <div className="flex flex-col items-center w-full mt-[8%]">
+        <div
+          className="flex flex-col items-center w-full"
+          style={{ marginTop: "20vh" }}
+        >
           <Vinyl />
           <Title />
           <div className="my-4 w-full flex justify-center z-10">

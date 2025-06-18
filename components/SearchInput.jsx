@@ -160,7 +160,7 @@ const SearchInput = ({
   const buttonContent = getButtonContent();
 
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="w-full flex flex-col items-center mx-4 sm:mx-8 md:mx-auto">
       <div className="relative w-full max-w-md">
         {/* Search Input Container */}
         <div
