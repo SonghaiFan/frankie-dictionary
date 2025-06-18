@@ -91,9 +91,9 @@ function ParticleRain() {
     particle.text = text;
     particle.isChinese = useChineseWord;
     particle.speed =
-      Math.random() * (isPlaying ? 2.5 : 1) + (isPlaying ? 1.2 : 0.8);
+      Math.random() * (isPlaying ? 0.8 : 1) + (isPlaying ? 1 : 0.8);
     particle.rotation = Math.random() * 360;
-    particle.rotationSpeed = (Math.random() - 0.5) * (isPlaying ? 4 : 2);
+    particle.rotationSpeed = (Math.random() - 0.5) * (isPlaying ? 2 : 1);
     particle.opacity =
       Math.random() * (isPlaying ? 0.6 : 0.3) + (isPlaying ? 0.3 : 0.1);
     particle.fontSize = Math.random() * 12 + 10;

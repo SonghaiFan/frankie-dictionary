@@ -254,16 +254,17 @@ const SearchInput = ({
         )}
       </div>
 
-      {/* Search Keyboard Hints - only show when modal is not open */}
-      {!isModalOpen && (
-        <div
-          className={`transition-opacity duration-300 ${
-            !query && !isFocused ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <SearchKeyboardHints />
-        </div>
-      )}
+      {/* Search Keyboard Hints - always reserve space to prevent layout shift */}
+      <div
+        className={`h-8 mt-2 flex items-center justify-center transition-opacity duration-300 ${
+          !isModalOpen && !query && !isFocused
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        }`}
+        aria-hidden={isModalOpen || !!query || isFocused}
+      >
+        <SearchKeyboardHints />
+      </div>
     </div>
   );
 };

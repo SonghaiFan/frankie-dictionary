@@ -185,35 +185,34 @@ export default function Home() {
 
   return (
     <PlaybackProvider>
-      <div className="flex flex-col items-center w-full mx-auto min-h-screen overflow-auto relative">
-        {/* Main Content */}
-        <div className="flex-grow" />
-        <div className="h-[10%] relative z-10">
+      <div className="flex flex-col h-screen items-center justify-center relative">
+        {/* Main Content Stack with top margin */}
+        <div className="flex flex-col items-center w-full mt-[8%]">
           <Vinyl />
           <Title />
+          <div className="my-4 w-full flex justify-center z-10">
+            <SearchInput
+              query={query}
+              setQuery={setQuery}
+              defaultText={placeholder?.中文}
+              onSelect={handleSelect}
+              results={results}
+              onRandom={handleRandom}
+              onConfirm={handleOpenModal}
+              isModalOpen={showExplanation}
+            />
+          </div>
         </div>
-        <div className="h-[40%] mb-[10%] relative z-10">
-          <SearchInput
-            query={query}
-            setQuery={setQuery}
-            defaultText={placeholder?.中文}
-            onSelect={handleSelect}
-            results={results}
-            onRandom={handleRandom}
-            onConfirm={handleOpenModal}
-            isModalOpen={showExplanation}
+        <div className="flex-grow flex items-center justify-center w-full">
+          <BlueCard
+            show={showExplanation}
+            onClose={handleCloseModal}
+            data={filteredData}
+            onShuffle={handleShuffle}
+            onClearSearch={handleClearSearch}
           />
         </div>
-        <BlueCard
-          show={showExplanation}
-          onClose={handleCloseModal}
-          data={filteredData}
-          onShuffle={handleShuffle}
-          onClearSearch={handleClearSearch}
-        />
-        <div className="flex-grow" />
         <Footer />
-
         {/* Particle Rain Background */}
         <ParticleRain />
       </div>
