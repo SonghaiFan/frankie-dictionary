@@ -1,0 +1,31 @@
+{
+  "title": "Dictionary",
+  "tagline": "Find a word. Hear it. Share it.",
+  "category": "Language / Discovery",
+  "layout": "grid",
+  "assets": [
+    {
+      "src": "assets/ui.png",
+      "fit": "contain",
+      "crop": [
+        454,
+        237,
+        800,
+        699
+      ],
+      "source_size": [
+        1708,
+        1245
+      ]
+    }
+  ],
+  "signature": "assets/frankie.svg",
+  "provenance": [
+    {
+      "file": "assets/ui.png",
+      "kind": "current local app screenshot",
+      "note": "Current Blue Dictionary word card for the bundled entry 偏爱; no personal input.",
+      "captured_on": "2026-11-05"
+    }
+  ]
+}
