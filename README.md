@@ -1,29 +1,31 @@
-![Blue Dictionary — Frankie Dictionary — current product banner](docs/readme/banner.png)
+![Blue Dictionary](docs/readme/banner.png)
 
-# Blue Dictionary — Frankie Dictionary
+# Blue Dictionary
 
-A Chinese word explorer with fuzzy search, explanations, audio playback and shareable word views.
+Find a Chinese word, open its explanation, and listen or share it.
 
-## Features
+[Guide](docs/guide.md) · [Run locally](#run-locally)
 
-- Search the bundled Chinese word collection with fuzzy matching.
-- Open explanations, browse adjacent entries or discover a random word.
-- Listen to available audio and share an individual word.
+## What it does
 
-## Getting started
+- Search the bundled word collection with fuzzy matching.
+- Browse neighboring entries or discover a random word.
+- Play available audio and share an individual word view.
+
+## Run locally
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Open the address printed by Next.js (normally http://localhost:3000).
+Open the address printed by Next.js, normally http://localhost:3000.
 
-## Project notes
+## Before you start
 
-Built with Next.js, React, Tailwind CSS, Fuse.js and browser audio. Word data lives in `public/data/`; UI components are in `components/`, with playback state in `contexts/`.
+The word collection is bundled with the app. Audio is available for entries that provide it; explanations and playback controls live in the word-card view.
 
-## Development
+## For developers
 
 ```sh
 npm run lint
@@ -31,4 +33,8 @@ npm run build
 npm start
 ```
 
-Banner sources and update instructions: [README artwork](docs/readme/README.md).
+[Project guide](docs/guide.md) · [Artwork](docs/readme/README.md)
+
+---
+
+Made by [Songhai Fan](https://github.com/SonghaiFan) · A Frankie project
