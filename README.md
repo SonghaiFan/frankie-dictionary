@@ -2,6 +2,8 @@
 
 # Blue Dictionary
 
+[English](README.md) · [简体中文](README.zh-CN.md)
+
 Find a Chinese word, open its explanation, and listen or share it.
 
 [Guide](docs/guide.md) · [Run locally](#run-locally)
