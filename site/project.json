@@ -5,54 +5,60 @@
   "kind": "online",
   "app_url": "https://blue-dictionary.vercel.app",
   "vercel_project": "blue-dictionary",
-  "accent": "#2762c1",
-  "tint": "#f1f5fc",
+  "accent": "#130f94",
+  "tint": "#f7f7fc",
   "category": {
-    "en": "Words / Chinese",
-    "zh": "词语 / 中文"
+    "en": "A game of words",
+    "zh": "文字游戏"
   },
   "steps": {
     "en": [
-      "Search for a Chinese word.",
-      "Open a matching entry or explore nearby words.",
-      "Read the explanation, listen when audio is available, or share it."
+      "Search or wander: Enter a word such as 晚安, its English label, or a source name. With an empty search, the search button opens the suggested random word.",
+      "Read the whole card: The Chinese word, English label, creative interpretation, English paraphrase and source credit are separate fields. Read them together.",
+      "Browse, save or share: Use arrows to continue, H to favorite, E to export or S to share. Esc closes the card. Share uses your browser’s share sheet when supported, otherwise a copied link."
     ],
     "zh": [
-      "搜索一个中文词语。",
-      "打开匹配词条，或探索相邻词语。",
-      "阅读释义，播放可用音频，或分享词条。"
+      "搜索，或随意逛逛: 输入“晚安”、英文词名，或出处名。搜索框为空时，点击搜索按钮会打开当前随机推荐词。",
+      "把整张卡片读完: 中文词名、英文词名、创作重释、英文转述与出处是不同字段，适合放在一起理解。",
+      "浏览、收藏、分享: 方向键继续，H 收藏，E 导出，S 分享，Esc 关闭卡片。支持时会打开浏览器分享面板，否则复制词条链接。"
     ]
   },
   "media": [
     {
-      "src": "docs/readme/assets/ui.png",
+      "src": "site/assets/home-current.png",
       "caption": {
-        "en": "Current product interface and original assets.",
-        "zh": "项目真实界面或原始素材。"
+        "en": "A quiet home screen with a record, search and keyboard hints.",
+        "zh": "首页的唱片、搜索与键盘提示。"
       },
-      "crop": [
-        454,
-        237,
-        800,
-        699
-      ],
-      "source_size": [
-        1708,
-        1245
-      ]
+      "captured_on": "2026-11-06"
     },
     {
-      "src": "site/assets/search.png",
+      "src": "site/assets/search-current.png",
       "caption": {
-        "en": "Search and browse the Chinese word collection.",
-        "zh": "搜索与浏览中文词库。"
+        "en": "Searching 晚安 finds the bundled Good night entry.",
+        "zh": "搜索“晚安”，找到内置的 Good night 词条。"
       },
-      "captured_on": "2026-11-05",
-      "source_revision": "See docs/readme/source-version.json"
+      "captured_on": "2026-11-06"
+    },
+    {
+      "src": "site/assets/card-current.png",
+      "caption": {
+        "en": "The opened card keeps its interpretation and source together.",
+        "zh": "打开卡片，重释与出处一起保留。"
+      },
+      "captured_on": "2026-11-06"
+    },
+    {
+      "src": "site/assets/browse-current.png",
+      "caption": {
+        "en": "Right Arrow moves to the next bundled entry, 礼物.",
+        "zh": "按向右方向键，切换到下一个内置词条“礼物”。"
+      },
+      "captured_on": "2026-11-06"
     }
   ],
   "art_note": {
-    "en": "Current product interface and original assets.",
-    "zh": "素材来自项目当前界面与原始资源。"
+    "en": "Actual current Blue Dictionary card, with creative interpretation and source credit.",
+    "zh": "当前蓝色词典的真实卡片，保留创作重释与出处。"
   }
 }

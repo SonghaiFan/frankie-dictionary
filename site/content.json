@@ -1,0 +1,164 @@
+{
+  "en": {
+    "headline": "Familiar words.\nUnexpected meanings.",
+    "intro": "A collection of poetic reinterpretations, made for reading, wandering and sharing one blue card at a time.",
+    "open": "Open Dictionary",
+    "try": "Read a few words",
+    "concept_title": "A word game, not a reference book.",
+    "concept": "Blue Dictionary gives everyday Chinese words a personal, playful second meaning. “Good night” becomes a save point in a daily conversation. Each card keeps its English wording, paraphrase and credited source together.",
+    "concept_note": "These are the collection’s creative interpretations, not standard definitions, verified quotations or language-learning translations.",
+    "shelf_title": "Three entries from the collection",
+    "shelf_note": "A small reading sample using the app’s actual bundled entries and card fields. The full app offers search and browsing; this sample saves nothing.",
+    "definition": "Interpretation",
+    "paraphrase": "English paraphrase",
+    "credit": "Credited in the collection to",
+    "features_title": "Look for a word. Or let one find you.",
+    "features": [
+      [
+        "Search across three fields",
+        "Type Chinese, English or a credited source. The app uses fuzzy matching over these fields, so a query can return a close match rather than an exact spelling. Select a result to open its card."
+      ],
+      [
+        "Keep exploring",
+        "Move to the previous or next entry with the arrow keys, or use Space for another random card while a card is open. On touch screens you can swipe between entries."
+      ],
+      [
+        "Keep a card close",
+        "Heart a word to store a favorite in this browser. Export a card as a PNG, or share a link that opens the same word. There is no account or cloud sync."
+      ],
+      [
+        "Put a record on",
+        "Tap the circular photo on the home screen to play or pause a looping lo-fi track. This is background music, not pronunciation audio."
+      ]
+    ],
+    "workflow_title": "Your first visit",
+    "steps": [
+      [
+        "Search or wander",
+        "Enter a word such as 晚安, its English label, or a source name. With an empty search, the search button opens the suggested random word."
+      ],
+      [
+        "Read the whole card",
+        "The Chinese word, English label, creative interpretation, English paraphrase and source credit are separate fields. Read them together."
+      ],
+      [
+        "Browse, save or share",
+        "Use arrows to continue, H to favorite, E to export or S to share. Esc closes the card. Share uses your browser’s share sheet when supported, otherwise a copied link."
+      ]
+    ],
+    "gallery_title": "Inside the real app",
+    "gallery_note": "Current live interface, captured while searching and browsing the bundled collection.",
+    "gallery": [
+      [
+        "home-current.png",
+        "A quiet home screen with a record, search and keyboard hints."
+      ],
+      [
+        "search-current.png",
+        "Searching 晚安 finds the bundled Good night entry."
+      ],
+      [
+        "card-current.png",
+        "The opened card keeps its interpretation and source together."
+      ],
+      [
+        "browse-current.png",
+        "Right Arrow moves to the next bundled entry, 礼物."
+      ]
+    ],
+    "start_title": "Read in your browser.",
+    "runtime": "Open the hosted app without signing in or adding an API key. The words are bundled with the project; search does not call an AI model. Favorites stay in localStorage on the current browser and site origin.",
+    "limits": "Sharing and image export depend on browser support. Clearing site data removes local favorites. Music starts only when you choose to play it; it is not speech or a pronunciation guide.",
+    "local": "Run locally",
+    "local_note": "Install dependencies, start the Next.js development server, then open the local address it prints.",
+    "credit_title": "The collection keeps its credits.",
+    "credit_note": "Entries retain the 出处 field supplied by the project. The app acknowledges 上山养大猫 and credits background music to Purrple Cat. A displayed attribution is the collection’s attribution, not independent verification of a quotation.",
+    "guide": "Asset & content update guide",
+    "source": "Source code",
+    "nav_concept": "The idea",
+    "nav_use": "First visit",
+    "nav_screens": "Screens",
+    "footer": "A Frankie project by Songhai Fan"
+  },
+  "zh": {
+    "headline": "熟悉的词。\n另一种解释。",
+    "intro": "一份关于日常词语的诗意重释集。读一张蓝色卡片，漫游、停留，再分享给别人。",
+    "open": "打开蓝色词典",
+    "try": "读几个词",
+    "concept_title": "文字游戏，不是工具辞典。",
+    "concept": "蓝色词典为日常中文词语提供私人而有趣的第二种解释。“晚安”可以是每天聊天的存档点。每张卡片把英文词名、重释、英文转述与出处放在一起。",
+    "concept_note": "这些是词集里的创作性解读，并非标准释义、已核实的名人语录或语言学习译文。",
+    "shelf_title": "来自词集的三个词",
+    "shelf_note": "这个阅读样例直接使用应用内置词条与卡片字段。完整应用提供搜索和连续浏览；此处不会保存数据。",
+    "definition": "重释",
+    "paraphrase": "英文转述",
+    "credit": "词集中标注的出处",
+    "features_title": "找一个词，也让词找到你。",
+    "features": [
+      [
+        "搜索三个字段",
+        "输入中文、英文或出处名。应用对这三个字段进行模糊匹配，因此可能返回接近的词，而非只匹配完整拼写。选择结果即可打开卡片。"
+      ],
+      [
+        "接着漫游",
+        "卡片打开时用方向键前后浏览，按空格随机换词。触屏上也可以左右滑动，继续读相邻词条。"
+      ],
+      [
+        "留下一张卡片",
+        "用爱心把喜欢的词保存在当前浏览器。也可以导出 PNG，或分享能直接打开同一词条的链接。无需账号，也没有云端同步。"
+      ],
+      [
+        "放一张唱片",
+        "点击首页圆形照片可播放或暂停循环的 lo-fi 音乐。这是背景音乐，并不是单词发音。"
+      ]
+    ],
+    "workflow_title": "第一次打开",
+    "steps": [
+      [
+        "搜索，或随意逛逛",
+        "输入“晚安”、英文词名，或出处名。搜索框为空时，点击搜索按钮会打开当前随机推荐词。"
+      ],
+      [
+        "把整张卡片读完",
+        "中文词名、英文词名、创作重释、英文转述与出处是不同字段，适合放在一起理解。"
+      ],
+      [
+        "浏览、收藏、分享",
+        "方向键继续，H 收藏，E 导出，S 分享，Esc 关闭卡片。支持时会打开浏览器分享面板，否则复制词条链接。"
+      ]
+    ],
+    "gallery_title": "真实应用界面",
+    "gallery_note": "从当前线上应用采集，展示内置词集的搜索与连续浏览。",
+    "gallery": [
+      [
+        "home-current.png",
+        "首页的唱片、搜索与键盘提示。"
+      ],
+      [
+        "search-current.png",
+        "搜索“晚安”，找到内置的 Good night 词条。"
+      ],
+      [
+        "card-current.png",
+        "打开卡片，重释与出处一起保留。"
+      ],
+      [
+        "browse-current.png",
+        "按向右方向键，切换到下一个内置词条“礼物”。"
+      ]
+    ],
+    "start_title": "在浏览器里读。",
+    "runtime": "打开线上应用即可使用，无需登录或 API key。词条随项目内置，搜索不会调用 AI 模型。收藏存储于当前浏览器和网站域名的 localStorage 中。",
+    "limits": "分享与图片导出受浏览器支持情况影响。清除网站数据会移除本地收藏。音乐只在主动播放后开始，它不是语音或发音指南。",
+    "local": "本地运行",
+    "local_note": "安装依赖，启动 Next.js 开发服务器，再打开终端输出的本地地址。",
+    "credit_title": "保留词集中的署名。",
+    "credit_note": "每条词保留项目提供的“出处”字段。应用致谢“上山养大猫”，背景音乐署名 Purrple Cat。页面展示的是词集的署名，并不代表已经独立核实某句引文的来源。",
+    "guide": "素材与内容更新指南",
+    "source": "源代码",
+    "nav_concept": "关于词集",
+    "nav_use": "开始阅读",
+    "nav_screens": "界面",
+    "footer": "Songhai Fan 的 Frankie 系列项目"
+  }
+}

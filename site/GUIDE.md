@@ -1,47 +1,60 @@
-# Introduction page maintenance / 介绍页维护
+# Blue Dictionary introduction maintenance / 介绍页维护
 
-[English README](../README.md) · [中文 README](../README.zh-CN.md)
+English is served at https://songhaifan.github.io/frankie-dictionary/ and Chinese at `zh/`. The actual app remains https://blue-dictionary.vercel.app. The introduction is built independently with Python’s standard library; it does not build Next.js or read env files.
 
-## Two destinations / 两个入口
+英文默认，中文位于 `zh/`。介绍页独立构建，不构建 Next.js，也不读取环境变量文件。
 
-- Introduction / 介绍页: https://songhaifan.github.io/frankie-dictionary/
-- App / 应用: https://blue-dictionary.vercel.app
-- The introduction is a standalone static site. It never builds the app or reads environment files. / 介绍页独立构建，不构建应用，也不读取环境变量文件。
-- English is the default; `zh/` is the Chinese version. / 英文默认，中文位于 `zh/`。
+## Content and source / 内容与来源
 
-## Files to update / 更新哪些文件
+- `site/content.json`: all bilingual visitor explanations, gallery captions, runtime and limitations. Update both language objects together. The intro no longer parses README paragraphs. / 所有双语说明与图片说明在此维护，不再从 README 推断结构。
+- `site/project.json`: app/Pages URLs and the source media manifest. / 维护链接与素材登记。
+- `site/build.py` → `samples()`: directly extracts the **first** bundled entries named `晚安`, `梦`, `欣赏` from `public/data/data.js`. This intentionally matches the app’s first-match shared-word lookup; duplicate word names can exist. It never evaluates JavaScript. If a selected word disappears, build fails so the sample cannot silently show invented text. / 从真实词库提取指定词名的第一条记录；词名可能重复，行为与应用分享链接首次匹配保持一致。词条消失时构建会报错。
+- `site/sample.js`: small reading sample of real data fields, adapted from `components/BlueCard.jsx`. It has no search, favorites, export or storage. Do not label it the complete app. / 只是一段真实词条阅读样例，不要当作完整应用。
+- For functional changes, reread `app/page.jsx`, `hooks/useFuseSearch.js`, `components/SearchInput.jsx`, `components/BlueCard.jsx` and `components/Vinyl.jsx`. Music is background lo-fi, not word pronunciation. The collection contains creative reinterpretations, not standard dictionary definitions. / 行为更新后核对这些文件；背景音乐不是发音，词条是创作重释而非标准释义。
 
-| Source / 来源 | What it shows / 内容 |
+## Screenshot replacement / 截图替换
+
+All four files below were captured from the current live app on 2026-11-06 at 1468×1247. Replace them after relevant UI changes; wait for card animation and fonts to settle. Use only public bundled words. Never screenshot private local data. Hero uses CSS cropping of the unchanged card screenshot.
+
+以下均为真实线上截图；界面变化后重新采集，等待卡片动画和字体加载完成。主图仅使用 CSS 裁切，保留原始截图。
+
+| Asset | Capture flow / 采集步骤 |
 | --- | --- |
-| `docs/readme/assets/ui.png` | Current product interface and original assets. |
-| `site/assets/search.png` | Search and browse the Chinese word collection. |
+| `site/assets/home-current.png` | Open app fresh, music paused, empty search. / 首页空搜索，暂停音乐。 |
+| `site/assets/search-current.png` | Type `晚安` and leave result list visible. / 搜索“晚安”，保留结果列表。 |
+| `site/assets/card-current.png` | Open `https://blue-dictionary.vercel.app/?word=晚安`, wait for fully visible card. / 打开分享链接并等待卡片完整显示。 |
+| `site/assets/browse-current.png` | From the open 晚安 card, press Right Arrow to 礼物. / 从“晚安”按右方向键进入“礼物”。 |
 
-- `../README.md` and `../README.zh-CN.md`: product introduction, features, setup, limitations and developer commands. Update both languages together. / 同步维护双语介绍、功能、运行步骤与限制。
-- `project.json`: app URL, repository, category, colors, three user steps and the ordered media list. / 应用链接、仓库、分类、颜色、使用步骤与有序素材列表。
-- `style.css`: this app's visual treatment within the shared layout. / 统一结构下的项目视觉风格。
-- `build.py`: portable standard-library renderer. / 可独立使用的 Python 标准库构建器。
+The hero and gallery filenames are referenced in `site/build.py`; captions live in `site/content.json` and the manifest. Keep all three in agreement. The old `site/assets/search.png` and README banner assets are retained; this intro refresh does not rewrite approved banners. OG image is copied from `docs/readme/banner.png`.
 
-## Replacing screenshots and GIFs / 替换截图和动图
+文件名在构建器引用，图片说明与素材登记需同步。旧截图与已确认 banner 保留；Open Graph 使用现有 banner。
 
-1. Run the current app and capture real, settled UI. Use synthetic or guest data; hide credentials and private content. For GIFs, record a real interaction from start to finish, rather than animating a static screenshot. / 运行当前版本，使用访客或示例数据采集稳定画面；GIF 应录制真实操作，不把静态图伪装成操作录像。
-2. Replace the corresponding source file above when its screen changes. These banner assets are shared with the README; replacing them may update both the banner and this page. Keep `docs/readme/source-version.json` and banner provenance accurate. / 界面变化后替换对应文件；共享素材会同时影响 banner，需同步更新来源记录。
-3. For a new screen or GIF, add it under `site/assets/` and add an entry to `project.json` → `media` with `src`, bilingual `caption`, and optionally `captured_on` / `source_revision`. The first item is the hero; the full list is the gallery. Use a GIF's first frame as an informative resting frame, keep files small, and provide a still alternative. / 新素材放到 `site/assets/`，登记双语说明、采集时间和版本；第一项为主图，其余进入画廊。GIF 应有可读首帧并保留静态替代图。
-4. If app behavior changes, update both READMEs and both `steps` arrays. Native screenshots and shared family artwork must be labelled honestly. / 行为变化时同步更新双语 README 和使用步骤；区分原生截图与系列共享素材。
-5. Build and inspect desktop and mobile, in both languages. Check the app link and every image. / 构建后检查桌面、手机和两种语言，验证链接与所有图片。
+## Typography / 字体
+
+`site/assets/noto-intro.woff2` is a subset of the app’s actual `public/font/Noto_Serif_SC/NotoSerifSC-Regular.otf`. The build copies the original `OFL.txt` into `media/`. No Google Fonts request is added. Regenerate after adding Chinese copy/words (requires optional fonttools + Brotli only on the maintenance machine, not in Pages CI):
+
+使用应用已有 Noto Serif SC 字体的子集，新增中文后重新生成；Pages 构建不依赖字体工具。
 
 ```sh
-python3 site/build.py
+cat site/content.json site/build.py public/data/data.js > /tmp/blue-intro-font-text.txt
+pyftsubset public/font/Noto_Serif_SC/NotoSerifSC-Regular.otf \
+  --text-file=/tmp/blue-intro-font-text.txt --flavor=woff2 \
+  --output-file=site/assets/noto-intro.woff2
+```
+
+## Preview and publish / 预览与发布
+
+```sh
+python3 site/build.py --out _site
 python3 -m http.server 8080 --directory _site --bind 127.0.0.1
 ```
 
-Open http://127.0.0.1:8080/ and http://127.0.0.1:8080/zh/.
+Open root and `/zh/` at desktop and 390px mobile width. Test all three sample buttons: the word, English label, interpretation, paraphrase and attribution must change together. Check all image links, `#use`, `#start`, app link, browser keyboard focus and narrow-screen overflow. The first sample stays readable without JavaScript.
 
-## Publishing / 发布
+检查双语、手机布局和三个样例切换，词名、释义、转述、出处应一起更新。检查所有图片和入口，无 JavaScript 时第一条样例仍可读。
 
-Push the reviewed page changes to `main`. `.github/workflows/pages.yml` publishes only `_site/` to GitHub Pages. App deployment remains separate on Vercel for browser apps; API services and native/local apps retain their own runtime. Never include `.env` files or unrelated work in a page commit. / 推送审核后的页面改动到 `main`，工作流只发布 `_site/`；应用与 API 的部署分别管理，勿提交环境变量文件或其他未完成代码。
+Commit only reviewed `site/` changes and any deliberately changed Pages configuration. Push `main`; `.github/workflows/pages.yml` builds `_site/` and publishes GitHub Pages. Do not commit generated `_site/`, env files or unrelated application edits. App deployment on Vercel is separate.
 
-If the branch or repository owner changes, update `project.json`, the workflow branch and README introduction links. / 分支或仓库所有者变化时，同步修改配置、工作流与介绍页链接。
+只提交本次介绍页文件。GitHub Pages 与 Vercel 应用部署互相独立，不提交生成目录、环境变量或其他代码修改。
 
-## App signature / 应用签名
-
-The app signature uses `public/frankie-signature.svg`, copied from the approved `docs/readme/assets/frankie.svg`. It links to this introduction page. / 应用签名使用已确认的系列 SVG，并链接到介绍页。
+The app’s existing Frankie signature is `public/frankie-signature.svg`; it links to this introduction. / 应用内已有签名链接到此介绍页。
