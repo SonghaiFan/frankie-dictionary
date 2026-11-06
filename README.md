@@ -6,7 +6,7 @@
 
 Find a Chinese word, open its explanation, and listen or share it.
 
-[Guide](docs/guide.md) · [Run locally](#run-locally)
+[Introduction](https://songhaifan.github.io/frankie-dictionary/) · [Guide](docs/guide.md) · [Run locally](#run-locally)
 
 ## What it does
 

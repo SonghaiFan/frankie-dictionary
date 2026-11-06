@@ -1,0 +1,58 @@
+{
+  "repository": "SonghaiFan/frankie-dictionary",
+  "branch": "main",
+  "pages_url": "https://songhaifan.github.io/frankie-dictionary/",
+  "kind": "online",
+  "app_url": "https://blue-dictionary.vercel.app",
+  "vercel_project": "blue-dictionary",
+  "accent": "#2762c1",
+  "tint": "#f1f5fc",
+  "category": {
+    "en": "Words / Chinese",
+    "zh": "词语 / 中文"
+  },
+  "steps": {
+    "en": [
+      "Search for a Chinese word.",
+      "Open a matching entry or explore nearby words.",
+      "Read the explanation, listen when audio is available, or share it."
+    ],
+    "zh": [
+      "搜索一个中文词语。",
+      "打开匹配词条，或探索相邻词语。",
+      "阅读释义，播放可用音频，或分享词条。"
+    ]
+  },
+  "media": [
+    {
+      "src": "docs/readme/assets/ui.png",
+      "caption": {
+        "en": "Current product interface and original assets.",
+        "zh": "项目真实界面或原始素材。"
+      },
+      "crop": [
+        454,
+        237,
+        800,
+        699
+      ],
+      "source_size": [
+        1708,
+        1245
+      ]
+    },
+    {
+      "src": "site/assets/search.png",
+      "caption": {
+        "en": "Search and browse the Chinese word collection.",
+        "zh": "搜索与浏览中文词库。"
+      },
+      "captured_on": "2026-11-05",
+      "source_revision": "See docs/readme/source-version.json"
+    }
+  ],
+  "art_note": {
+    "en": "Current product interface and original assets.",
+    "zh": "素材来自项目当前界面与原始资源。"
+  }
+}

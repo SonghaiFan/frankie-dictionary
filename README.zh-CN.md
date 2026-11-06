@@ -6,7 +6,7 @@
 
 查找中文词语，打开释义，再聆听或分享。
 
-[项目指南](docs/guide.md) · [本地运行](#本地运行)
+[介绍页](https://songhaifan.github.io/frankie-dictionary/zh/) · [项目指南](docs/guide.md) · [本地运行](#本地运行)
 
 ## 可以做什么
 
