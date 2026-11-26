@@ -90,9 +90,9 @@ const Vinyl = () => {
         animate={isPlaying ? "playing" : "paused"}
         whileHover="hover"
         variants={{ ...imageVariants, ...hoverVariants }}
-        src={`/images/Blue_Photo${randomIndex}.jpg`}
+        src="/frankie-dictionary-symbol.svg"
         onClick={togglePlayback}
-        alt="Blue_Photo"
+        alt="Blue Dictionary portrait"
         width={10}
         height={10}
         className="absolute inset-0 w-full h-full object-cover rounded-full cursor-pointer shadow-xl"

@@ -5,6 +5,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Blue Dictionary",
+  manifest: "/site.webmanifest",
+  icons: { icon: "/favicon.svg", apple: "/apple-touch-icon.png" },
   description: "A dictionary for blue explanations",
 };
 
