@@ -1,5 +1,7 @@
 name: Deploy app introduction
 on:
+  schedule:
+    - cron: '32 6 * * *'
   push:
     branches: [main]
     paths: ['.github/brand/**', 'public/**', 'client/public/**', 'site/**', 'public/data/data.js', 'public/font/Noto_Serif_SC/OFL.txt', 'docs/readme/banner.png', 'README.md', 'README.zh-CN.md', 'docs/readme/assets/**', '.github/workflows/pages.yml']
@@ -25,6 +27,11 @@ jobs:
       - name: Build introduction only
         run: python3 site/build.py
       - uses: actions/configure-pages@v5
+      - name: Apply and verify shared series footer
+        uses: SonghaiFan/SonghaiFan/.github/actions/series-footer@main
+        with:
+          series: frankie
+          site-root: _site
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
